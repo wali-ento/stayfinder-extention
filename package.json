@@ -1,0 +1,44 @@
+{
+  "name": "stayfinder-extension",
+  "version": "1.0.0",
+  "description": "StayFinder Chrome Extension - Save money by booking vacation rentals direct",
+  "type": "module",
+  "scripts": {
+    "dev": "wxt",
+    "dev:firefox": "wxt -b firefox",
+    "build": "wxt build",
+    "build:firefox": "wxt build -b firefox",
+    "zip": "wxt zip",
+    "zip:firefox": "wxt zip -b firefox",
+    "compile": "tsc --noEmit",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage"
+  },
+  "keywords": [
+    "chrome-extension",
+    "airbnb",
+    "direct-booking",
+    "stayfinder"
+  ],
+  "author": "StayFinder Team",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "1.12.2",
+    "date-fns": "4.1.0",
+    "react": "19.2.0",
+    "react-dom": "19.2.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "6.9.1",
+    "@testing-library/react": "16.3.0",
+    "@types/chrome": "0.1.22",
+    "@vitejs/plugin-react": "^5.0.4",
+    "@wxt-dev/module-react": "^1.1.5",
+    "happy-dom": "20.0.0",
+    "typescript": "5.9.3",
+    "vite": "7.1.9",
+    "vitest": "3.2.4",
+    "wxt": "0.20.11"
+  }
+}
