@@ -1,46 +1,26 @@
-# WXT
-.output
-.wxt
-*.tsbuildinfo
-
-# Dependencies
-node_modules
-
 # Logs
 logs
 *.log
 npm-debug.log*
-pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# Environment
-.env
-.env.local
-.env.*.local
+node_modules
+.output
+stats.html
+stats-*.json
+.wxt
+web-ext.config.ts
 
-# IDE
+# Editor directories and files
 .vscode/*
 !.vscode/extensions.json
 .idea
-*.swp
-*.swo
-*~
-
-# OS
 .DS_Store
-Thumbs.db
-
-# Test
-coverage
-.nyc_output
-
-# Build
-dist
-build
-*.zip
-
-# Misc
-.cache
-
-
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

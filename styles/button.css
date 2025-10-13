@@ -1,0 +1,68 @@
+/* Global button styles - reusable across ALL sites */
+
+.stayfinder-button-base {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-weight: bold !important;
+  cursor: pointer !important;
+  border: none !important;
+  pointer-events: auto !important;
+  transition: all 0.3s ease !important;
+  user-select: none !important;
+}
+
+/* Listing card button */
+.stayfinder-listing-button {
+  position: absolute !important;
+  top: 10px !important;
+  left: 10px !important;
+  z-index: 999999 !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  padding: 8px 16px !important;
+  border-radius: 20px !important;
+  font-size: 13px !important;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.6) !important;
+  transition: transform 0.2s, box-shadow 0.2s !important;
+}
+
+.stayfinder-listing-button:hover {
+  transform: translateY(-2px) scale(1.05) !important;
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.8) !important;
+}
+
+/* Detail page button */
+.stayfinder-detail-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  padding: 12px 24px !important;
+  border-radius: 25px !important;
+  font-size: 14px !important;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.6) !important;
+  margin-top: 12px !important;
+  white-space: nowrap !important;
+  transition: all 0.3s ease !important;
+}
+
+.stayfinder-detail-button:hover {
+  transform: translateY(-2px) scale(1.05) !important;
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.8) !important;
+}
+
+/* Status indicator */
+.stayfinder-indicator {
+  position: fixed !important;
+  top: 10px !important;
+  right: 10px !important;
+  z-index: 999999 !important;
+  background: #667eea !important;
+  color: white !important;
+  padding: 10px 15px !important;
+  border-radius: 8px !important;
+  font-family: -apple-system, sans-serif !important;
+  font-size: 12px !important;
+  font-weight: bold !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+  cursor: pointer !important;
+  transition: opacity 0.5s !important;
+}
+
