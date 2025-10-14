@@ -1,3 +1,4 @@
+import { BOOK_DIRECT_ICON, SAVINGS_ICON } from '@/assets/svg-icons';
 import { generateSavings } from '../../utils/price';
 
 export interface ButtonConfig {
@@ -18,7 +19,7 @@ export function createListingButton(config: ButtonConfig): HTMLElement {
   if (listingId) {
     button.setAttribute('data-listing-id', listingId);
   }
-  button.innerHTML = `💰 Save $${savings}`;
+  button.innerHTML = `${SAVINGS_ICON} Save $${savings}`;
   
   // Click handler
   button.addEventListener('click', (e) => {
@@ -45,7 +46,7 @@ export function createDetailButton(config: ButtonConfig): HTMLElement {
   
   const button = document.createElement('div');
   button.className = 'stayfinder-button-base stayfinder-detail-button';
-  button.innerHTML = `💰 Save $${savings} - Book Direct`;
+  button.innerHTML = `${BOOK_DIRECT_ICON} Save $${savings} - Book Direct`;
   
   // Click handler
   button.addEventListener('click', (e) => {
