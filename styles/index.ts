@@ -1,4 +1,4 @@
-import buttonCSS from './button.css?raw';
+import buttonCSS from './stayfinder-global.css?raw';
 
 /**
  * Inject global styles into the page - runs once for all sites

@@ -1,6 +1,6 @@
 import { AIRBNB_CONFIG } from './config';
 import { createListingButton, createDetailButton } from '../../components/Button';
-import { findCardContainer, findImageWrapper } from '../../../utils/dom';
+import { findCardContainer } from '../../../utils/dom';
 
 /**
  * Inject price buttons on listing cards
@@ -26,25 +26,18 @@ export function injectListingButtons(processedIds: Set<string>) {
     // Skip if already processed
     if (processedIds.has(listingId)) return;
     processedIds.add(listingId);
-    
-    console.log(`✨ Processing listing ${listingId}`);
-    
+        
     const cardContainer = findCardContainer(link as HTMLElement);
     if (!cardContainer) {
       console.warn(`⚠️ Could not find card container for ${listingId}`);
       return;
     }
     
-    const imageWrapper = findImageWrapper(cardContainer);
-    if (!imageWrapper) {
-      console.warn(`⚠️ No image wrapper found for ${listingId}`);
-      return;
-    }
-    
-    // Create and inject button using global component
+    // Create and inject button using global component at the bottom of the card
     const button = createListingButton({ listingId });
-    imageWrapper.appendChild(button);
-    console.log(`✅ Button injected for ${listingId}`);
+    
+    // Append to the end of the card container (bottom of card)
+    cardContainer.appendChild(button);
   });
 }
 
@@ -56,7 +49,6 @@ export function injectDetailButton() {
   
   // Check if button already exists
   if (document.querySelector('.stayfinder-detail-button')) {
-    console.log('Detail button already exists, skipping...');
     return;
   }
   
@@ -66,10 +58,12 @@ export function injectDetailButton() {
     return;
   }
   
-  console.log('✨ Adding detail button');
-  
+  const firstChild = detailElement.querySelector('[data-testid="book-it-default"]');
+  if (!firstChild) {
+    return;
+  }
+    
   // Create and inject button using global component
   const button = createDetailButton({});
-  (detailElement as HTMLElement).appendChild(button);
-  console.log('✅ Detail button added');
+  firstChild.parentNode?.insertBefore(button, firstChild.nextSibling);
 }

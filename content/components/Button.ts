@@ -20,17 +20,6 @@ export function createListingButton(config: ButtonConfig): HTMLElement {
   }
   button.innerHTML = `💰 Save $${savings}`;
   
-  // Hover effects
-  button.addEventListener('mouseenter', () => {
-    button.style.transform = 'translateY(-2px) scale(1.05)';
-    button.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.8)';
-  });
-  
-  button.addEventListener('mouseleave', () => {
-    button.style.transform = 'translateY(0) scale(1)';
-    button.style.boxShadow = '0 4px 12px rgba(102, 126, 234, 0.6)';
-  });
-  
   // Click handler
   button.addEventListener('click', (e) => {
     e.preventDefault();
@@ -57,17 +46,6 @@ export function createDetailButton(config: ButtonConfig): HTMLElement {
   const button = document.createElement('div');
   button.className = 'stayfinder-button-base stayfinder-detail-button';
   button.innerHTML = `💰 Save $${savings} - Book Direct`;
-  
-  // Hover effects
-  button.addEventListener('mouseenter', () => {
-    button.style.transform = 'translateY(-2px) scale(1.05)';
-    button.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.8)';
-  });
-  
-  button.addEventListener('mouseleave', () => {
-    button.style.transform = 'translateY(0) scale(1)';
-    button.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.6)';
-  });
   
   // Click handler
   button.addEventListener('click', (e) => {

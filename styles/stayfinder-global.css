@@ -1,5 +1,10 @@
 /* Global button styles - reusable across ALL sites */
 
+:root {
+  --text-color: #585858;
+  --primary-color: #0677FF;
+}
+
 .stayfinder-button-base {
   font-family: -apple-system, BlinkMacSystemFont, sans-serif !important;
   font-weight: bold !important;
@@ -12,41 +17,46 @@
 
 /* Listing card button */
 .stayfinder-listing-button {
-  position: absolute !important;
-  top: 10px !important;
-  left: 10px !important;
-  z-index: 999999 !important;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-  color: white !important;
-  padding: 8px 16px !important;
+  display: block !important;
+  width: 100% !important;
+  margin-top: 12px !important;
+  color: var(--text-color) !important;
+  padding: 8px 12px !important;
   border-radius: 20px !important;
-  font-size: 13px !important;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.6) !important;
-  transition: transform 0.2s, box-shadow 0.2s !important;
+  font-size: 14px !important;
+  text-align: center !important;
+  border: 1px solid rgba(88, 88, 88, 0.20) !important;
+  cursor: pointer !important;
+  z-index: 999999 !important;
+  position: relative !important;
 }
 
 .stayfinder-listing-button:hover {
-  transform: translateY(-2px) scale(1.05) !important;
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.8) !important;
+  background: var(--primary-color) !important;
+  color: white !important;
 }
 
 /* Detail page button */
 .stayfinder-detail-button {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  border-radius: 1000px !important;
+  background: radial-gradient(276.33% 143.12% at 0.43% 125.6%, #AB29FF 0%, #0677FF 100%) !important;
   color: white !important;
-  padding: 12px 24px !important;
-  border-radius: 25px !important;
+  padding: 10px 16px !important;
   font-size: 14px !important;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.6) !important;
   margin-top: 12px !important;
   white-space: nowrap !important;
   transition: all 0.3s ease !important;
-  text-align: center;
+  text-align: center !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  z-index: 999999 !important;
+  position: relative !important;
+  display: block !important;
+  width: 100% !important;
 }
 
 .stayfinder-detail-button:hover {
-  transform: translateY(-2px) scale(1.05) !important;
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.8) !important;
+  background: radial-gradient(115.65% 59.9% at 83.65% 125.6%, #AB29FF 0%, #0677FF 100%) !important;
 }
 
 /* Status indicator */
@@ -66,4 +76,5 @@
   cursor: pointer !important;
   transition: opacity 0.5s !important;
 }
+
 
