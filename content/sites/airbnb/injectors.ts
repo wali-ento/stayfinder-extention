@@ -1,11 +1,13 @@
 import { AIRBNB_CONFIG } from './config';
 import { createListingButton, createDetailButton } from '../../components/Button';
 import { findCardContainer } from '../../../utils/dom';
+import { getSavingsForListingId } from '../../../utils/price';
 
 /**
  * Inject price buttons on listing cards
+ * Same listing IDs get same button savings
  */
-export function injectListingButtons(processedIds: Set<string>) {
+export function injectListingButtons() {
   const links = document.querySelectorAll(AIRBNB_CONFIG.selectors.listingLinks);
   console.log(`Found ${links.length} property links`);
   
@@ -23,20 +25,17 @@ export function injectListingButtons(processedIds: Set<string>) {
     
     const listingId = match[1];
     
-    // Skip if already processed
-    if (processedIds.has(listingId)) return;
-    processedIds.add(listingId);
-        
     const cardContainer = findCardContainer(link as HTMLElement);
     if (!cardContainer) {
       console.warn(`⚠️ Could not find card container for ${listingId}`);
       return;
     }
     
-    // Create and inject button using global component at the bottom of the card
-    const button = createListingButton({ listingId });
+    // Skip if button already exists in this specific card
+    if (cardContainer.querySelector('.stayfinder-listing-button')) return;
     
-    // Append to the end of the card container (bottom of card)
+    const savings = getSavingsForListingId(listingId, 30, 180);    
+    const button = createListingButton({ listingId, savings });
     cardContainer.appendChild(button);
   });
 }

@@ -2,9 +2,6 @@ import { AIRBNB_CONFIG } from './config';
 import { extractListingIds } from './extractors';
 import { injectListingButtons, injectDetailButton } from './injectors';
 
-// Track processed IDs globally for this site
-const processedIds = new Set<string>();
-
 /**
  * Send listing IDs to background script
  */
@@ -30,7 +27,7 @@ export function runAirbnb() {
   }
   
   // Inject buttons
-  injectListingButtons(processedIds);
+  injectListingButtons();
   injectDetailButton();
 }
 
