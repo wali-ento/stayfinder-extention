@@ -42,11 +42,13 @@ export function createListingButton(config: ButtonConfig): HTMLElement {
  * Uses global CSS classes
  */
 export function createDetailButton(config: ButtonConfig): HTMLElement {
-  const { savings = generateSavings(50, 250), onClick } = config;
+  const { savings, onClick } = config;
   
   const button = document.createElement('div');
   button.className = 'stayfinder-button-base stayfinder-detail-button';
-  button.innerHTML = `${BOOK_DIRECT_ICON} Save $${savings} - Book Direct`;
+  button.innerHTML = (savings && savings > 0) 
+  ? `${BOOK_DIRECT_ICON} Save $${Math.ceil(savings)}`
+  : `${BOOK_DIRECT_ICON} Compare Price`;
   
   // Click handler
   button.addEventListener('click', (e) => {

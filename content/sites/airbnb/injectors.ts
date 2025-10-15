@@ -2,10 +2,10 @@ import { AIRBNB_CONFIG } from './config';
 import { createListingButton, createDetailButton } from '../../components/Button';
 import { findCardContainer } from '../../../utils/dom';
 import { getSavingsForListingId } from '../../../utils/price';
+import type { ListingPrices } from '../../../types/services-types';
 
 /**
  * Inject price buttons on listing cards
- * Same listing IDs get same button savings
  */
 export function injectListingButtons() {
   const links = document.querySelectorAll(AIRBNB_CONFIG.selectors.listingLinks);
@@ -41,19 +41,18 @@ export function injectListingButtons() {
 }
 
 /**
- * Inject button on detail pages
+ * Inject button on detail pages with prices data
  */
-export function injectDetailButton() {
-  console.log('🔍 Checking for detail page elements...');
-  
-  // Check if button already exists
-  if (document.querySelector('.stayfinder-detail-button')) {
+export function injectDetailButton(pricesData?: ListingPrices | null) {
+  if (!pricesData) {
     return;
   }
   
+  // Check if button already exists
+  const existingButton = document.querySelector('.stayfinder-detail-button') as HTMLElement;
+  
   const detailElement = document.querySelector(AIRBNB_CONFIG.selectors.detailPageElement);
   if (!detailElement) {
-    console.log('No detail page element found');
     return;
   }
   
@@ -61,8 +60,27 @@ export function injectDetailButton() {
   if (!firstChild) {
     return;
   }
-    
-  // Create and inject button using global component
-  const button = createDetailButton({});
+  
+  // Calculate discount from prices data
+  const discount = pricesData.direct_booking_website_discount || 0;
+  const bookNowUrl = pricesData.book_now_url;
+  
+  // If button exists,
+  if (existingButton) {
+    return;
+  }
+  
+  // Create new button with discount
+  const button = createDetailButton({ 
+    savings: discount ? discount : undefined,
+    onClick: bookNowUrl ? () => window.open(bookNowUrl, '_blank') : undefined
+  });
+  
+  if (bookNowUrl) {
+    button.setAttribute('data-book-url', bookNowUrl);
+  }
+  
   firstChild.parentNode?.insertBefore(button, firstChild.nextSibling);
+  console.log('Button injected with discount:', discount);
 }
+
