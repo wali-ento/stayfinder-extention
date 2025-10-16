@@ -12,7 +12,6 @@ export function injectListingButtons() {
   console.log(`Found ${links.length} property links`);
   
   if (links.length === 0) {
-    console.warn('⚠️ No property links found!');
     return;
   }
   
@@ -75,12 +74,7 @@ export function injectDetailButton(pricesData?: ListingPrices | null) {
     savings: discount ? discount : undefined,
     onClick: bookNowUrl ? () => window.open(bookNowUrl, '_blank') : undefined
   });
-  
-  if (bookNowUrl) {
-    button.setAttribute('data-book-url', bookNowUrl);
-  }
-  
+
   firstChild.parentNode?.insertBefore(button, firstChild.nextSibling);
-  console.log('Button injected with discount:', discount);
 }
 

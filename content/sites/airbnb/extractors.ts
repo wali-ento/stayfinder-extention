@@ -10,7 +10,7 @@ export function extractListingIds(): string[] {
   const urlMatch = window.location.href.match(AIRBNB_CONFIG.patterns.listingIdFromUrl);
   if (urlMatch) {
     ids.push(urlMatch[1]);
-    console.log('📍 Detail page - ID from URL:', urlMatch[1]);
+    console.log('Detail page - ID from URL:', urlMatch[1]);
   }
   
   // 2. Extract IDs from all listing links

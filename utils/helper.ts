@@ -1,6 +1,6 @@
 // Simple cache to prevent duplicate API calls
 const cache = new Map<string, { data: any; timestamp: number }>();
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+const CACHE_DURATION = 1 * 60 * 1000; // 1 minute
 
 /**
  * Send listing IDs to background script

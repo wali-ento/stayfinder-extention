@@ -1,6 +1,5 @@
 import { injectGlobalStyles } from '../styles';
-import { initAirbnb, runAirbnb } from './sites/airbnb';
-import { setupObserver } from './core/observer';
+import { initAirbnb } from './sites/airbnb';
 import { showStatusIndicator } from './components/StatusIndicator';
 
 /**
@@ -15,11 +14,6 @@ export function initContentScript() {
   // Step 2: Initialize Airbnb handler
   initAirbnb();
   
-  // Step 3: Setup observer for dynamic content
-  setupObserver(() => {
-    runAirbnb().catch(err => console.error('Error in runAirbnb:', err));
-  });
-  
-  // Step 4: Show status indicator
+  // Step 3: Show status indicator
   showStatusIndicator();
 }

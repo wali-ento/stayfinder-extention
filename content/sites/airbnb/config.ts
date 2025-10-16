@@ -12,7 +12,7 @@ export const AIRBNB_CONFIG = {
   },
   
   delays: {
-    initialLoad: 2000,
+    initialLoad: 300,
   },
 };
 

@@ -4,6 +4,7 @@ import { injectListingButtons, injectDetailButton } from './injectors';
 import { sendListingIds, getCached } from '../../../utils/helper';
 import { reverseSearch, getListingPrices } from '../../../services/api-service';
 import type { ListingPricesParams, ReverseSearchResponse, ListingPrices } from '../../../types/services-types';
+import { setupObserver } from '@/content/core/observer';
 
 /**
  * Fetch reverse search data for the current Airbnb page
@@ -59,13 +60,9 @@ async function fetchListingPrices(reverseSearchData: ReverseSearchResponse): Pro
   if (response) {
     // Check if it's an error response
     if ('error' in response) {
-      console.error('❌ Listing Prices Error:', response.error);
+      console.error('Listing Prices Error:', response.error);
       return null;
     }
-    
-    console.log('✅ Listing Prices Response:', response);
-    console.log('💵 Direct Booking Discount:', response.data.direct_booking_website_discount);
-    
     return response.data;
   }
   
@@ -75,7 +72,7 @@ async function fetchListingPrices(reverseSearchData: ReverseSearchResponse): Pro
 /**
  * Run the Airbnb handler - extract and inject
  */
-export async function runAirbnb() {  
+export async function runAirbnb() {
   const reverseSearchData = await fetchReverseSearch();
   
   let pricesData: ListingPrices | null = null;
@@ -86,7 +83,7 @@ export async function runAirbnb() {
   // Extract and send listing IDs
   const ids = extractListingIds();
   if (ids.length > 0) {
-    console.log(`📤 Found ${ids.length} listing IDs:`, ids);
+    console.log(`Found ${ids.length} listing IDs:`, ids);
     sendListingIds(ids);
   }
   
@@ -98,7 +95,7 @@ export async function runAirbnb() {
     if (pricesData) {
       injectDetailButton(pricesData);
     } else {
-      console.log('⚠️ No prices data, skipping button injection');
+      console.log('No prices data, skipping button injection');
     }
   }
 }
@@ -110,4 +107,9 @@ export function initAirbnb() {
   setTimeout(() => {
     runAirbnb().catch(err => console.error('Error in runAirbnb:', err));
   }, AIRBNB_CONFIG.delays.initialLoad);
+
+  // Setup observer for dynamic content injection
+  setupObserver(() => {
+    runAirbnb().catch(err => console.error('Error in runAirbnb:', err));
+  });
 }

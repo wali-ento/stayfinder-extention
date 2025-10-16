@@ -1,6 +1,6 @@
 // Debounce timer
 let debounceTimer: NodeJS.Timeout | null = null;
-const DEBOUNCE_DELAY = 1000; // 1 second
+const DEBOUNCE_DELAY = 300; // 300ms
 
 /**
  * Setup MutationObserver to watch for DOM changes (with debouncing)
