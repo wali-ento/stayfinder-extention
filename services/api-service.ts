@@ -17,7 +17,7 @@ export const reverseSearch = async (
 };
 
 /**
- * Get listing prices for given dates and guest configuration
+ * Get listing prices 
  */
 export const getListingPrices = async (
   id: number,
