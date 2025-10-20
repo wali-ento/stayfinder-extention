@@ -43,7 +43,8 @@
   color: white !important;
 }
 
-.stayfinder-listing-button:hover svg path:nth-child(1) {
+.stayfinder-listing-button:hover svg path:nth-child(1),
+.stayfinder-listing-button:hover svg path:nth-child(2) {
   fill: white !important;
 }
 
