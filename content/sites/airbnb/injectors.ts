@@ -3,6 +3,7 @@ import { createListingButton, createDetailButton } from '../../components/Button
 import { findCardContainer } from '../../../utils/dom';
 import { getSavingsForListingId } from '../../../utils/price';
 import type { ListingPrices } from '../../../types/services-types';
+import { SAVINGS_ICON } from '@/assets/svg-icons';
 
 /**
  * Inject price buttons on listing cards
@@ -55,7 +56,7 @@ export function injectDetailButton(pricesData?: ListingPrices | null) {
     return;
   }
   
-  const firstChild = detailElement.querySelector('[data-testid="book-it-default"]');
+  const firstChild = detailElement.querySelector(AIRBNB_CONFIG.selectors.bookingButtonContainer);
   if (!firstChild) {
     return;
   }
@@ -76,5 +77,42 @@ export function injectDetailButton(pricesData?: ListingPrices | null) {
   });
 
   firstChild.parentNode?.insertBefore(button, firstChild.nextSibling);
+}
+
+/**
+ * Inject logo overlay on listing images
+ */
+export function injectLogoOnImages() {
+  const links = document.querySelectorAll(AIRBNB_CONFIG.selectors.listingLinks);
+  
+  links.forEach((link) => {
+    const cardContainer = findCardContainer(link as HTMLElement);
+    if (!cardContainer) return;
+    
+    // Skip if logo already exists
+    if (cardContainer.querySelector('.stayfinder-logo-overlay')) return;
+    
+    // Find the image container
+    const imgContainer = cardContainer.querySelector(AIRBNB_CONFIG.selectors.imageContainer) as HTMLElement;
+    if (!imgContainer) return;
+    
+    // Create logo overlay
+    const logo = document.createElement('div');
+    logo.className = 'stayfinder-logo-overlay';
+    logo.innerHTML = `${SAVINGS_ICON}`;
+    
+    logo.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      window.open("https://stayfinder.co", '_blank');
+    });
+    
+    // Position parent relatively
+    if (imgContainer.style.position !== 'absolute') {
+      imgContainer.style.position = 'relative';
+    }
+    
+    imgContainer.appendChild(logo);
+  });
 }
 

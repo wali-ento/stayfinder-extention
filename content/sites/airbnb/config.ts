@@ -5,6 +5,8 @@ export const AIRBNB_CONFIG = {
   selectors: {
     listingLinks: 'a[href*="/rooms/"]',
     detailPageElement: '._1xm48ww',
+    imageContainer: '.awuxh4x',
+    bookingButtonContainer: '[data-testid="book-it-default"]',
   },
   
   patterns: {

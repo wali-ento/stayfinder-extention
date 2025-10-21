@@ -99,4 +99,26 @@
   gap: 6px !important;
 }
 
+/* Logo overlay on listing images */
+.stayfinder-logo-overlay {
+  position: absolute !important;
+  bottom: 0 !important;
+  right: 0 !important;
+  background: white !important;
+  border-radius: 10px 10px 20px 10px !important;
+  padding: 8px !important;
+  z-index: 999999 !important;
+  pointer-events: auto !important;
+  transition: all 0.3s ease !important;
+  cursor: pointer !important;
+}
 
+.stayfinder-logo-overlay:hover {
+  background: #f8f9fa !important;
+  transform: scale(1.05) !important;
+}
+
+.stayfinder-logo-overlay svg {
+  width: 40px !important;
+  height: 40px !important;
+}

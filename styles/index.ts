@@ -1,7 +1,7 @@
 import buttonCSS from './stayfinder-global.css?raw';
 
 /**
- * Inject global styles into the page - runs once for all sites
+ * Inject global styles into the page
  */
 export function injectGlobalStyles() {
   if (document.getElementById('stayfinder-global-styles')) {
@@ -13,6 +13,5 @@ export function injectGlobalStyles() {
   styleElement.textContent = buttonCSS;
   
   document.head.appendChild(styleElement);
-  console.log('✅ Global styles injected');
 }
 

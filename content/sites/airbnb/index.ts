@@ -1,6 +1,6 @@
 import { AIRBNB_CONFIG } from './config';
 import { extractListingIds, isDetailPage } from './extractors';
-import { injectListingButtons, injectDetailButton } from './injectors';
+import { injectListingButtons, injectDetailButton, injectLogoOnImages } from './injectors';
 import { sendListingIds, getCached } from '../../../utils/helper';
 import { reverseSearch, getListingPrices } from '../../../services/api-service';
 import type { ListingPricesParams, ReverseSearchResponse, ListingPrices } from '../../../types/services-types';
@@ -89,6 +89,9 @@ export async function runAirbnb() {
   
   // Inject buttons
   injectListingButtons();
+  
+  // Inject logo on images
+  injectLogoOnImages();
   
   // Step 3: Inject detail button only if we have prices data
   if (isDetailPage()) {
