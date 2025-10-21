@@ -7,10 +7,7 @@ const CACHE_DURATION = 1 * 60 * 1000; // 1 minute
  */
 export function sendListingIds(ids: string[]) {
   const listingData = ids.map(id => ({ airbnb_id: id }));
-  
-  browser.runtime.sendMessage(listingData)
-    .then(() => console.log('IDs sent to background'))
-    .catch((err) => console.error('Error sending IDs:', err));
+  console.log('Listing IDs:', listingData);
 }
 
 /**
