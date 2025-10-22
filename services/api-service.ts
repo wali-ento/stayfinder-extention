@@ -1,20 +1,12 @@
 import { apiFetch } from '../lib/api-client';
 import type {
-  ReverseSearchResponse,
-  ReverseSearchError,
   ListingPricesParams,
   ListingPricesResponse,
   ListingPricesError,
+  OtaListingLookupParams,
+  OtaListingsLookupResponse,
+  OtaListingsLookupError,
 } from '../types/services-types';
-
-/**
- * Reverse search - Find listing information from a property URL
- */
-export const reverseSearch = async (
-  link: string,
-): Promise<ReverseSearchResponse | ReverseSearchError> => {
-  return apiFetch(`reverse_searches?listing_url=${link}`);
-};
 
 /**
  * Get listing prices for given dates and guest configuration
@@ -24,4 +16,13 @@ export const getListingPrices = async (
   params: ListingPricesParams,
 ): Promise<ListingPricesResponse | ListingPricesError> => {
   return apiFetch(`listings/${id}/prices`, { params });
+};
+
+/**
+ * Lookup OTA listings to get StayFinder listing IDs and availability information
+ */
+export const lookupOtaListings = async (
+  params: OtaListingLookupParams,
+): Promise<OtaListingsLookupResponse | OtaListingsLookupError> => {
+  return apiFetch('ota_listings_lookups', { params });
 };

@@ -1,105 +1,153 @@
 import { AIRBNB_CONFIG } from './config';
-import { extractListingIds, isDetailPage } from './extractors';
-import { injectListingButtons, injectDetailButton, injectLogoOnImages } from './injectors';
-import { sendListingIds, getCached } from '../../../utils/helper';
-import { reverseSearch, getListingPrices } from '../../../services/api-service';
-import type { ListingPricesParams, ReverseSearchResponse, ListingPrices } from '../../../types/services-types';
+import { extractListingIds, extractSearchParams, isDetailPage, isCheckoutPage, extractCheckoutListingId } from './extractors';
+import { injectDetailButton, injectListingButtons, injectLogoOnImages, injectCheckoutButton } from './injectors';
+import { getCached, chunkArray } from '../../../utils/helper';
+import { getListingPrices, lookupOtaListings } from '../../../services/api-service';
+import type { ListingPricesParams, ListingPrices, OtaListingData } from '../../../types/services-types';
 import { setupObserver } from '@/content/core/observer';
 
 /**
- * Fetch reverse search data for the current Airbnb page
- */
-async function fetchReverseSearch(): Promise<ReverseSearchResponse | null> {
-  if (!isDetailPage()) {
-    return null;
-  }
-  
-  const currentUrl = window.location.href;
-  
-  // Use cache for the API call
-  const response = await getCached(currentUrl, async () => {
-    return await reverseSearch(encodeURIComponent(currentUrl));
-  });
-  
-  if (response) {
-    // Check if it's an error response
-    if ('error' in response && 'message' in response) {
-      console.error(' Reverse Search Error:', (response as any).message);
-      return null;
+ * Fetch OTA listings lookup to get StayFinder listing IDs
+*/
+const fetchOtaListingsLookup = async (listingIds: string[]): Promise<OtaListingData[] | null> => {
+  if (!listingIds || listingIds.length === 0) return null;
+
+  const chunkSize = 18;
+  const chunks = chunkArray(listingIds, chunkSize);
+  const allResults: OtaListingData[] = [];
+
+  for (const chunk of chunks) {
+    try {
+      const response = await lookupOtaListings({ listing_ids: chunk });
+      if ('data' in response) {
+        allResults.push(...response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching OTA listings lookup:', error);
     }
   }
-  return response as ReverseSearchResponse | null;
-}
+
+  return allResults;
+};
 
 /**
  * Fetch listing prices if listing_id is available
  */
-async function fetchListingPrices(reverseSearchData: ReverseSearchResponse): Promise<ListingPrices | null> {
-  const { listing_id, query_params } = reverseSearchData;
-  
-  if (!listing_id) {
+async function fetchListingPrice(listing_id: number): Promise<ListingPrices | null> {
+  if (!listing_id) return null; // skip if no listing_id
+
+  // Extract query params from the page
+  const params: ListingPricesParams | null = extractSearchParams();
+  if (!params) {
+    console.warn(`⚠️ No check-in/check-out found, skipping price fetch for listing ${listing_id}`);
     return null;
   }
-  
-  // Build params for prices API
-  const params: ListingPricesParams = {
-    check_in_date: query_params.check_in_date || '',
-    check_out_date: query_params.check_out_date || '',
-    number_of_adults: parseInt(query_params.number_of_adults || '1'),
-    number_of_children: parseInt(query_params.number_of_children || '0'),
-    number_of_infants: parseInt(query_params.number_of_infants || '0'),
-    number_of_pets: parseInt(query_params.number_of_pets || '0'),
-  };
-    
-  // Use cache for prices API
-  const cacheKey = `prices_${listing_id}_${params.check_in_date}_${params.check_out_date}`;
-  const response = await getCached(cacheKey, async () => {
-    return await getListingPrices(listing_id, params);
-  });
-  
-  if (response) {
-    // Check if it's an error response
+
+  const cacheKey = `price_${listing_id}_${params.check_in_date}_${params.check_out_date}`;
+
+  try {
+    const response = await getCached(cacheKey, async () => {
+      return await getListingPrices(listing_id, params);
+    });
+
+    if (!response) return null;
     if ('error' in response) {
-      console.error('Listing Prices Error:', response.error);
+      console.error(`❌ Prices API Error for ${listing_id}:`, response.error);
       return null;
     }
-    return response.data;
+
+    return response.data || null;
+  } catch (error) {
+    console.error(`❌ Failed to fetch prices for ${listing_id}:`, error);
+    return null;
   }
-  
-  return null;
+}
+
+/**
+ * For all OTA lookup results, call prices API where listing_id exists
+ */
+async function fetchPricesForOtaListings(otaListings: OtaListingData[]): Promise<
+  Record<string, ListingPrices | null>
+> {
+  const results: Record<string, ListingPrices | null> = {};
+
+  for (const item of otaListings) {
+    const { airbnb_listing_id, listing_id } = item;
+
+    if (listing_id) {
+      console.log(`💰 Fetching price for StayFinder listing: ${listing_id}`);
+      const prices = await fetchListingPrice(listing_id);
+      results[airbnb_listing_id] = prices;
+    } else {
+      console.log(`⏭️ Skipping ${airbnb_listing_id} (no listing_id)`);
+      results[airbnb_listing_id] = null;
+    }
+  }
+
+  return results;
 }
 
 /**
  * Run the Airbnb handler - extract and inject
  */
 export async function runAirbnb() {
-  const reverseSearchData = await fetchReverseSearch();
-  
-  let pricesData: ListingPrices | null = null;
-  if (reverseSearchData && reverseSearchData.listing_id) {
-    pricesData = await fetchListingPrices(reverseSearchData);
-  }
-  
   // Extract and send listing IDs
-  const ids = extractListingIds();
+  let ids: string[] = [];
+
+  if (isCheckoutPage()) {
+    const checkoutId = extractCheckoutListingId();
+    if (checkoutId) ids.push(checkoutId);
+  } else {
+    ids = extractListingIds();
+  }
+
   if (ids.length > 0) {
     console.log(`Found ${ids.length} listing IDs:`, ids);
-    sendListingIds(ids);
   }
-  
-  // Inject buttons
-  injectListingButtons();
-  
-  // Inject logo on images
-  injectLogoOnImages();
-  
-  // Step 3: Inject detail button only if we have prices data
-  if (isDetailPage()) {
-    if (pricesData) {
-      injectDetailButton(pricesData);
-    } else {
-      console.log('No prices data, skipping button injection');
+
+  const otaListings = await fetchOtaListingsLookup(ids);
+    if (!otaListings) {
+      console.warn('⚠️ No OTA listings found');
+      return;
     }
+
+    const allPrices = await fetchPricesForOtaListings(otaListings as OtaListingData[]);
+    console.log('💹 All prices data: ', allPrices);
+  
+  //  Inject detail button only if we have prices data
+  
+  if (isDetailPage()) {
+    const currentId = ids[0]; // extractListingIds() gives the single one on detail page
+    const matchedOta = otaListings?.find(o => o.airbnb_listing_id === currentId);
+
+    if (matchedOta && matchedOta.listing_id) {
+        if (allPrices[currentId]) {
+          injectDetailButton(allPrices[currentId] as ListingPrices);
+        }
+    }
+  }
+
+  //  Inject checkout button only if we have prices data
+  if (isCheckoutPage()) {
+    const checkoutListingId = ids[0];
+    const matchedOta = otaListings.find(o => o.airbnb_listing_id === checkoutListingId);
+
+    if (matchedOta?.listing_id) {
+      const checkoutPrices = allPrices[checkoutListingId];
+      if (checkoutPrices) {
+        console.log('🛒 Injecting checkout button with price data');
+        injectCheckoutButton(checkoutPrices);
+      } else {
+        console.log(`🛒 No price data available for checkout listing ${checkoutListingId}`);
+      }
+    } else {
+      console.log(`🛒 No matching OTA data found for checkout listing ${checkoutListingId}`);
+    }
+  }
+
+  if (!isDetailPage() && !isCheckoutPage()) {
+    injectListingButtons(allPrices);
+    injectLogoOnImages(allPrices);
   }
 }
 

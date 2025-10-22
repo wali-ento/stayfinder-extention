@@ -2,7 +2,7 @@ const BASE_URL = 'https://stayfinder.stayfi.com';
 const API_VERSION = 'v1';
 
 type Options = RequestInit & {
-  params?: Record<string, string | number | boolean>;
+  params?: Record<string, string | number | boolean | string[]>;
   maxRetries?: number;
   retryDelay?: number;
 };
@@ -12,7 +12,14 @@ function buildUrl(endpoint: string, params?: Options['params']) {
 
   if (params) {
     for (const [k, v] of Object.entries(params)) {
-      url.searchParams.append(k, String(v));
+      if (Array.isArray(v)) {
+        // Handle array parameters
+        v.forEach((item) => {
+          url.searchParams.append(`${k}[]`, String(item));
+        });
+      } else {
+        url.searchParams.append(k, String(v));
+      }
     }
   }
 

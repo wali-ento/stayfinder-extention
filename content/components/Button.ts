@@ -1,10 +1,10 @@
 import { BOOK_DIRECT_ICON, SAVINGS_ICON } from '@/assets/svg-icons';
-import { generateSavings } from '../../utils/price';
 
 export interface ButtonConfig {
   listingId?: string;
   savings?: number;
   onClick?: () => void;
+  className?: string;
 }
 
 /**
@@ -12,14 +12,14 @@ export interface ButtonConfig {
  * Uses global CSS classes
  */
 export function createListingButton(config: ButtonConfig): HTMLElement {
-  const { listingId, savings = generateSavings(30, 180), onClick } = config;
+  const { listingId, savings, onClick } = config;
   
   const button = document.createElement('div');
   button.className = 'stayfinder-button-base stayfinder-listing-button';
   if (listingId) {
     button.setAttribute('data-listing-id', listingId);
   }
-  button.innerHTML = `${SAVINGS_ICON} Save $${savings}`;
+  button.innerHTML = `${SAVINGS_ICON} Save $${Math.ceil(savings || 0)}`;
   
   // Click handler
   button.addEventListener('click', (e) => {
@@ -42,10 +42,10 @@ export function createListingButton(config: ButtonConfig): HTMLElement {
  * Uses global CSS classes
  */
 export function createDetailButton(config: ButtonConfig): HTMLElement {
-  const { savings, onClick } = config;
+  const { savings, onClick, className } = config;
   
   const button = document.createElement('div');
-  button.className = 'stayfinder-button-base stayfinder-detail-button';
+  button.className = `stayfinder-button-base ${className || ''}`;
   button.innerHTML = (savings && savings > 0) 
   ? `${BOOK_DIRECT_ICON} Save $${Math.ceil(savings)}`
   : `${BOOK_DIRECT_ICON} Compare Price`;
@@ -64,4 +64,15 @@ export function createDetailButton(config: ButtonConfig): HTMLElement {
   });
   
   return button;
+}
+
+
+export function insertShimmerButton(container: HTMLElement) {
+  if (!container) return;
+  if (container.querySelector('.sf-shimmer')) return; // avoid duplicates
+
+  const shimmer = document.createElement('div');
+  shimmer.className = 'sf-shimmer';
+  shimmer.style.marginTop = '8px';
+  container.appendChild(shimmer);
 }

@@ -7,10 +7,13 @@ export const AIRBNB_CONFIG = {
     detailPageElement: '._1xm48ww',
     imageContainer: '.awuxh4x',
     bookingButtonContainer: '[data-testid="book-it-default"]',
+    checkoutButtonContainer: '.s19yufy1',
+    checkoutSummaryContainer: '[data-testid="booking-details"] ._1e0z1o7, .booking-summary',
   },
   
   patterns: {
     listingIdFromUrl: /\/rooms\/(\d+)/,
+    checkoutListingIdFromUrl: /\/book\/stays\/(\d+)/,
   },
   
   delays: {

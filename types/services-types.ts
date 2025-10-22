@@ -40,23 +40,26 @@ export type ListingPricesError = {
   error: string;
 };
 
-// Reverse Searches API Types
-export interface ReverseSearchResponse {
-  direct_booking: boolean;
-  listing_id: number;
-  query_params: {
-    check_in_date: string | null;
-    check_out_date: string | null;
-    number_of_adults: string | null;
-    number_of_children: string | null;
-    number_of_infants: string | null;
-    number_of_pets: string | null;
-  };
-  location_id: number | null;
-}
 
-export interface ReverseSearchError {
+// OTA Listings Lookup API Types
+export type OtaListingLookupParams = {
+  listing_ids: string[];
+};
+
+export type OtaListingData = {
+  airbnb_listing_id: string;
+  listing_id: number;
+  direct_booking: boolean;
+  price_available: boolean;
+};
+
+export type OtaListingsLookupResponse = {
+  data: OtaListingData[];
+};
+
+export type OtaListingsLookupError = {
+  success: false;
   error: string;
-  message: string;
-}
+};
+
 

@@ -1,14 +1,13 @@
 import { AIRBNB_CONFIG } from './config';
-import { createListingButton, createDetailButton } from '../../components/Button';
+import { createListingButton, createDetailButton, insertShimmerButton } from '../../components/Button';
 import { findCardContainer } from '../../../utils/dom';
-import { getSavingsForListingId } from '../../../utils/price';
 import type { ListingPrices } from '../../../types/services-types';
 import { SAVINGS_ICON } from '@/assets/svg-icons';
 
 /**
  * Inject price buttons on listing cards
  */
-export function injectListingButtons() {
+export function injectListingButtons(allPrices: Record<string, ListingPrices | null>) {
   const links = document.querySelectorAll(AIRBNB_CONFIG.selectors.listingLinks);
   console.log(`Found ${links.length} property links`);
   
@@ -23,19 +22,26 @@ export function injectListingButtons() {
     const match = href.match(AIRBNB_CONFIG.patterns.listingIdFromUrl);
     if (!match) return;
     
-    const listingId = match[1];
-    
-    const cardContainer = findCardContainer(link as HTMLElement);
-    if (!cardContainer) {
-      console.warn(`⚠️ Could not find card container for ${listingId}`);
+    const airbnbId = match[1];
+
+    const priceData = allPrices[airbnbId];
+    if (!priceData) {
+      console.log(`⏭️ Skipping injection for ${airbnbId} — no price data`);
       return;
     }
     
+    const cardContainer = findCardContainer(link as HTMLElement);
+    if (!cardContainer) return;
+    
+    
     // Skip if button already exists in this specific card
     if (cardContainer.querySelector('.stayfinder-listing-button')) return;
-    
-    const savings = getSavingsForListingId(listingId, 30, 180);    
-    const button = createListingButton({ listingId, savings });
+
+    const savings = priceData.direct_booking_website_discount || 0;
+    const button = createListingButton({
+      listingId: airbnbId,
+      savings,
+    });
     cardContainer.appendChild(button);
   });
 }
@@ -73,7 +79,8 @@ export function injectDetailButton(pricesData?: ListingPrices | null) {
   // Create new button with discount
   const button = createDetailButton({ 
     savings: discount ? discount : undefined,
-    onClick: bookNowUrl ? () => window.open(bookNowUrl, '_blank') : undefined
+    onClick: bookNowUrl ? () => window.open(bookNowUrl, '_blank') : undefined,
+    className: 'stayfinder-detail-button'
   });
 
   firstChild.parentNode?.insertBefore(button, firstChild.nextSibling);
@@ -82,10 +89,24 @@ export function injectDetailButton(pricesData?: ListingPrices | null) {
 /**
  * Inject logo overlay on listing images
  */
-export function injectLogoOnImages() {
+export function injectLogoOnImages(allPrices: Record<string, ListingPrices | null>) {
   const links = document.querySelectorAll(AIRBNB_CONFIG.selectors.listingLinks);
   
   links.forEach((link) => {
+    const href = link.getAttribute('href');
+    if (!href) return;
+    
+    const match = href.match(AIRBNB_CONFIG.patterns.listingIdFromUrl);
+    if (!match) return;
+    
+    const airbnbId = match[1];
+
+    const priceData = allPrices[airbnbId];
+    if (!priceData) {
+      console.log(`⏭️ Skipping injection for ${airbnbId} — no price data`);
+      return;
+    }
+
     const cardContainer = findCardContainer(link as HTMLElement);
     if (!cardContainer) return;
     
@@ -114,5 +135,35 @@ export function injectLogoOnImages() {
     
     imgContainer.appendChild(logo);
   });
+}
+
+/**
+ * Inject button on checkout page with prices data
+ */
+export function injectCheckoutButton(pricesData?: ListingPrices | null) {
+  if (!pricesData) {
+    return;
+  }
+  
+  // Check if button already exists
+  const existingButton = document.querySelector('.stayfinder-checkout-button') as HTMLElement;
+  if (existingButton) return;
+  
+  // Try to find a good container for the button
+  let buttonContainer = document.querySelector(AIRBNB_CONFIG.selectors.checkoutButtonContainer);
+  if (!buttonContainer) return;
+  
+  // Calculate discount from prices data
+  const discount = pricesData.direct_booking_website_discount || 0;
+  const bookNowUrl = pricesData.book_now_url;
+  
+  // Create checkout button with discount
+  const button = createDetailButton({ 
+    savings: discount ? discount : undefined,
+    onClick: bookNowUrl ? () => window.open(bookNowUrl, '_blank') : undefined,
+    className: 'stayfinder-checkout-button'
+  });
+
+  buttonContainer.insertBefore(button, buttonContainer?.firstChild?.nextSibling as Node);
 }
 

@@ -77,6 +77,35 @@
   background: radial-gradient(115.65% 59.9% at 83.65% 125.6%, #AB29FF 0%, #0677FF 100%) !important;
 }
 
+/* Checkout page button */
+.stayfinder-checkout-button {
+  border-radius: 1000px !important;
+  background: radial-gradient(276.33% 143.12% at 0.43% 125.6%, #AB29FF 0%, #0677FF 100%) !important;
+  color: white !important;
+  padding: 10px 16px !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  line-height: 20px !important;
+  margin-top: 12px !important;
+  white-space: nowrap !important;
+  transition: all 0.3s ease !important;
+  text-align: center !important;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  z-index: 999999 !important;
+  position: relative !important;
+  display: block !important;
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+}
+
+.stayfinder-checkout-button:hover {
+  background: radial-gradient(115.65% 59.9% at 83.65% 125.6%, #AB29FF 0%, #0677FF 100%) !important;
+}
+
 /* Status indicator */
 .stayfinder-indicator {
   position: fixed !important;
@@ -121,4 +150,24 @@
 .stayfinder-logo-overlay svg {
   width: 40px !important;
   height: 40px !important;
+}
+
+/* shimmer */
+.sf-shimmer {
+  display: inline-block;
+  width: 100%;
+  height: 36px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #eee 25%, #ddd 50%, #eee 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }

@@ -3,14 +3,6 @@ const cache = new Map<string, { data: any; timestamp: number }>();
 const CACHE_DURATION = 1 * 60 * 1000; // 1 minute
 
 /**
- * Send listing IDs to background script
- */
-export function sendListingIds(ids: string[]) {
-  const listingData = ids.map(id => ({ airbnb_id: id }));
-  console.log('Listing IDs:', listingData);
-}
-
-/**
  * Simple cache helper - returns cached data if still valid, otherwise fetches new data
  */
 export async function getCached<T>(
@@ -34,3 +26,13 @@ export async function getCached<T>(
   }
 }
 
+/**
+ * Chunk an array into smaller arrays of a given size
+ */
+export function chunkArray<T>(array: T[], size: number): T[][] {
+  const result: T[][] = [];
+  for (let i = 0; i < array.length; i += size) {
+    result.push(array.slice(i, i + size));
+  }
+  return result;
+}
