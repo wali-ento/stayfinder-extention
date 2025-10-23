@@ -130,7 +130,7 @@ export async function runAirbnb() {
 
       if (matchedOta && matchedOta.listing_id) {
         if (allPrices[currentId]) {
-          injectDetailButton(allPrices[currentId] as ListingPrices);
+          injectDetailButton(allPrices[currentId] as ListingPrices, matchedOta);
         }
       }
     }
@@ -144,7 +144,7 @@ export async function runAirbnb() {
         const checkoutPrices = allPrices[checkoutListingId];
         if (checkoutPrices) {
           console.log('🛒 Injecting checkout button with price data');
-          injectCheckoutButton(checkoutPrices);
+          injectCheckoutButton(checkoutPrices, matchedOta);
         } else {
           console.log(`🛒 No price data available for checkout listing ${checkoutListingId}`);
         }

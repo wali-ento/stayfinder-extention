@@ -4,6 +4,7 @@
 :root {
   --text-color: #585858;
   --primary-color: #0677FF;
+  --secondary-color: #1E293B;
   --font-family: 'Inter', sans-serif;
 }
 
@@ -39,20 +40,17 @@
 }
 
 .stayfinder-listing-button:hover {
-  background: var(--primary-color) !important;
-  color: white !important;
-}
-
-.stayfinder-listing-button:hover svg path:nth-child(1),
-.stayfinder-listing-button:hover svg path:nth-child(2) {
-  fill: white !important;
+  border: 1px solid #585858 !important;
+  color: var(--secondary-color) !important;
+  font-weight: 600 !important;
 }
 
 /* Detail page button */
 .stayfinder-detail-button {
   border-radius: 1000px !important;
-  background: radial-gradient(276.33% 143.12% at 0.43% 125.6%, #AB29FF 0%, #0677FF 100%) !important;
-  color: white !important;
+  background: white !important;
+  border: 1px solid rgba(88, 88, 88, 0.20) !important;
+  color: #585858 !important;
   padding: 14px 16px !important;
   font-size: 14px !important;
   font-weight: 600 !important;
@@ -74,7 +72,9 @@
 }
 
 .stayfinder-detail-button:hover {
-  background: radial-gradient(115.65% 59.9% at 83.65% 125.6%, #AB29FF 0%, #0677FF 100%) !important;
+  border: 1px solid #585858 !important;
+  color: var(--secondary-color) !important;
+  font-weight: 600 !important;
 }
 
 /* Checkout page button */
@@ -128,6 +128,11 @@
   gap: 6px !important;
 }
 
+.stayfinder-indicator svg path:nth-child(1),
+.stayfinder-indicator svg path:nth-child(2) {
+  fill: white !important;
+}
+
 /* Logo overlay on listing images */
 .stayfinder-logo-overlay {
   position: absolute !important;
@@ -175,6 +180,11 @@
   height: 13px !important;
 }
 
+.stayfinder-logo-overlay button svg path:nth-child(1),
+.stayfinder-logo-overlay button svg path:nth-child(2) {
+  fill: white !important;
+} 
+
 .stayfinder-logo-overlay button:hover {
   background: #f8f9fa !important;
 }
@@ -184,22 +194,16 @@
   fill: var(--primary-color) !important;
 } 
 
-/* shimmer */
-.sf-shimmer {
-  display: inline-block;
-  width: 100%;
-  height: 36px;
-  border-radius: 8px;
-  background: linear-gradient(90deg, #eee 25%, #ddd 50%, #eee 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
+.sf-partner-status {
+  background: radial-gradient(276.33% 143.12% at 0.43% 125.6%, #AB29FF 0%, #0677FF 100%) !important;
+  color: white !important;
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
+.sf-partner-status:hover {
+  background: radial-gradient(115.65% 59.9% at 83.65% 125.6%, #AB29FF 0%, #0677FF 100%) !important;
+}
+
+.sf-partner-status svg path:nth-child(1),
+.sf-partner-status svg path:nth-child(2) {
+  fill: white !important;
 }

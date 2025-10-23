@@ -2,7 +2,8 @@ import { AIRBNB_CONFIG } from './config';
 import { createListingButton, createDetailButton } from '../../components/Button';
 import { findCardContainer } from '../../../utils/dom';
 import type { ListingPrices, OtaListingData } from '../../../types/services-types';
-import { BOOK_DIRECT_ICON } from '@/assets/svg-icons';
+import { getButtonResponse, getPartnerBadgeText, shouldShowPartnerBadge } from '../../../utils/price';
+import { LOGO_ICON } from '@/assets/svg-icons';
 
 /**
  * Inject price buttons on listing cards
@@ -28,27 +29,22 @@ export function injectListingButtons(
     const airbnbId = match[1];
 
     const otaData = otaListings.find(o => o.airbnb_listing_id === airbnbId);
-    if (!otaData?.listing_id) {
-      return;
-    }
-
     const priceData = allPrices[airbnbId];
-    if (!priceData) {
-      console.log(`⏭️ Skipping injection for ${airbnbId} — no price data`);
-      return;
-    }
+    
+    // Use utility function to check if button should be shown
+    const buttonResponse = getButtonResponse(otaData, priceData);
+    if (!buttonResponse.shouldShow) return;
     
     const cardContainer = findCardContainer(link as HTMLElement);
     if (!cardContainer) return;
     
-    
     // Skip if button already exists in this specific card
     if (cardContainer.querySelector('.stayfinder-listing-button')) return;
 
-    const savings = priceData.direct_booking_website_discount || 0;
     const button = createListingButton({
       listingId: airbnbId,
-      savings,
+      otaData: otaData,
+      pricesData: priceData
     });
     cardContainer.appendChild(button);
   });
@@ -57,11 +53,10 @@ export function injectListingButtons(
 /**
  * Inject button on detail pages with prices data
  */
-export function injectDetailButton(pricesData?: ListingPrices | null) {
-  if (!pricesData) {
-    return;
-  }
-  
+export function injectDetailButton(
+  pricesData?: ListingPrices | null,
+  otaData?: OtaListingData
+) {
   // Check if button already exists
   const existingButton = document.querySelector('.stayfinder-detail-button') as HTMLElement;
   
@@ -75,20 +70,23 @@ export function injectDetailButton(pricesData?: ListingPrices | null) {
     return;
   }
   
-  // Calculate discount from prices data
-  const discount = pricesData.direct_booking_website_discount || 0;
-  const bookNowUrl = pricesData.book_now_url;
+  // Use utility function to check if button should be shown
+  const buttonResponse = getButtonResponse(otaData, pricesData);
+  if (!buttonResponse.shouldShow) {
+    console.log(`⏭️ Skipping detail button injection — ${!otaData?.listing_id ? 'no listing_id' : 'conditions not met'}`);
+    return;
+  }
   
   // If button exists,
   if (existingButton) {
     return;
   }
   
-  // Create new button with discount
+  // Create new button with OTA data and prices
   const button = createDetailButton({ 
-    savings: discount ? discount : undefined,
-    onClick: bookNowUrl ? () => window.open(bookNowUrl, '_blank') : undefined,
-    className: 'stayfinder-detail-button'
+    otaData: otaData,
+    pricesData: pricesData,
+    className: 'stayfinder-detail-button',
   });
 
   firstChild.parentNode?.insertBefore(button, firstChild.nextSibling);
@@ -121,6 +119,9 @@ export function injectLogoOnImages(
       return;
     }
 
+    // Skip logo injection if both price_available and direct_booking are false
+    if (!otaData.price_available && !otaData.direct_booking) return;
+
     const cardContainer = findCardContainer(link as HTMLElement);
     if (!cardContainer) return;
     
@@ -131,22 +132,34 @@ export function injectLogoOnImages(
     const imgContainer = cardContainer.querySelector(AIRBNB_CONFIG.selectors.imageContainer) as HTMLElement;
     if (!imgContainer) return;
     
-    // Create logo overlay
+    // Check if partner badge should be shown
+    const shouldShowBadge = shouldShowPartnerBadge(otaData);
+    const badgeText = getPartnerBadgeText(otaData);
+    
+    // Create logo overlay with conditional badge
     const logo = document.createElement('div');
     logo.className = 'stayfinder-logo-overlay';
+    
+    // Only include span if there's a partner badge to show
+    const badgeSpan = shouldShowBadge ? `<span>${badgeText}</span>` : '';
+    
     logo.innerHTML = `
-        <span>
-          Verified
-        </span>
+        ${badgeSpan}
         <button>
-          ${BOOK_DIRECT_ICON}
+          ${LOGO_ICON}
         </button>
     `;
     
     logo.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
-      window.open("https://stayfinder.co", '_blank');
+
+      if (otaData.direct_booking && priceData?.book_now_url) {
+        // Redirect to the book now URL
+        window.open(priceData.book_now_url, '_blank');
+      } else {
+        window.open("https://stayfinder.com", '_blank');
+      }
     });
     
     // Position parent relatively
@@ -161,11 +174,10 @@ export function injectLogoOnImages(
 /**
  * Inject button on checkout page with prices data
  */
-export function injectCheckoutButton(pricesData?: ListingPrices | null) {
-  if (!pricesData) {
-    return;
-  }
-  
+export function injectCheckoutButton(
+  pricesData?: ListingPrices | null,
+  otaData?: OtaListingData
+) {
   // Check if button already exists
   const existingButton = document.querySelector('.stayfinder-checkout-button') as HTMLElement;
   if (existingButton) return;
@@ -174,14 +186,17 @@ export function injectCheckoutButton(pricesData?: ListingPrices | null) {
   let buttonContainer = document.querySelector(AIRBNB_CONFIG.selectors.checkoutButtonContainer);
   if (!buttonContainer) return;
   
-  // Calculate discount from prices data
-  const discount = pricesData.direct_booking_website_discount || 0;
-  const bookNowUrl = pricesData.book_now_url;
+  // Use utility function to check if button should be shown
+  const buttonResponse = getButtonResponse(otaData, pricesData);
+  if (!buttonResponse.shouldShow) {
+    console.log(`⏭️ Skipping checkout button injection — ${!otaData?.listing_id ? 'no listing_id' : 'conditions not met'}`);
+    return;
+  }
   
-  // Create checkout button with discount
+  // Create checkout button with OTA data and prices
   const button = createDetailButton({ 
-    savings: discount ? discount : undefined,
-    onClick: bookNowUrl ? () => window.open(bookNowUrl, '_blank') : undefined,
+    otaData: otaData,
+    pricesData: pricesData,
     className: 'stayfinder-checkout-button'
   });
 

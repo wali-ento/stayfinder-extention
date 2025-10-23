@@ -1,4 +1,4 @@
-import { BOOK_DIRECT_ICON } from "@/assets/svg-icons";
+import { LOGO_ICON } from "@/assets/svg-icons";
 
 /**
  * Show status indicator to confirm extension is active
@@ -6,7 +6,7 @@ import { BOOK_DIRECT_ICON } from "@/assets/svg-icons";
 export function showStatusIndicator() {
   const indicator = document.createElement('div');
   indicator.className = 'stayfinder-indicator';
-  indicator.innerHTML = `${BOOK_DIRECT_ICON} StayFinder Active`;
+  indicator.innerHTML = `${LOGO_ICON} StayFinder Active`;
   
   indicator.onclick = () => {
     console.log('📊 Extension Status:');

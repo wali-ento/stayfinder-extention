@@ -1,10 +1,14 @@
-import { BOOK_DIRECT_ICON, SAVINGS_ICON } from '@/assets/svg-icons';
+import { ListingPrices, OtaListingData } from '@/types/services-types';
+import { getButtonResponse, applyPartnerBadgeClasses } from '../../utils/price';
+import { LOGO_ICON } from '@/assets/svg-icons';
 
 export interface ButtonConfig {
   listingId?: string;
   savings?: number;
   onClick?: () => void;
   className?: string;
+  otaData?: OtaListingData;
+  pricesData?: ListingPrices | null;
 }
 
 /**
@@ -12,15 +16,26 @@ export interface ButtonConfig {
  * Uses global CSS classes
  */
 export function createListingButton(config: ButtonConfig): HTMLElement {
-  const { listingId, savings, onClick } = config;
+  const { listingId, onClick, otaData, pricesData } = config;
+
+  // Use utility function to get button response
+  const buttonResponse = getButtonResponse(otaData, pricesData);
+  
+  // Don't create button if it shouldn't be shown
+  if (!buttonResponse.shouldShow) {
+    return document.createElement('div'); // Return empty div
+  }
   
   const button = document.createElement('div');
   button.className = 'stayfinder-button-base stayfinder-listing-button';
   if (listingId) {
     button.setAttribute('data-listing-id', listingId);
   }
-  button.innerHTML = `${SAVINGS_ICON} Save $${Math.ceil(savings || 0)}`;
+  button.innerHTML = `${LOGO_ICON} ${buttonResponse.buttonText}`;
   
+  // Apply partner badge classes
+  applyPartnerBadgeClasses(button, otaData);
+
   // Click handler
   button.addEventListener('click', (e) => {
     e.preventDefault();
@@ -29,6 +44,8 @@ export function createListingButton(config: ButtonConfig): HTMLElement {
     
     if (onClick) {
       onClick();
+    } else if (buttonResponse.redirectUrl) {
+      window.open(buttonResponse.redirectUrl, '_blank');
     } else {
       window.open('https://www.google.com/search?q=book+vacation+rental+direct', '_blank');
     }
@@ -42,13 +59,21 @@ export function createListingButton(config: ButtonConfig): HTMLElement {
  * Uses global CSS classes
  */
 export function createDetailButton(config: ButtonConfig): HTMLElement {
-  const { savings, onClick, className } = config;
+  const { savings, onClick, className, otaData, pricesData } = config;
+  
+  // Use utility function to get button response
+  const buttonResponse = getButtonResponse(otaData, pricesData);
   
   const button = document.createElement('div');
   button.className = `stayfinder-button-base ${className || ''}`;
-  button.innerHTML = (savings && savings > 0) 
-  ? `${BOOK_DIRECT_ICON} Save $${Math.ceil(savings)}`
-  : `${BOOK_DIRECT_ICON} Compare Price`;
+  
+  // Use button response if available, otherwise fallback to savings
+  if (buttonResponse.shouldShow) {
+    button.innerHTML = `${LOGO_ICON} ${buttonResponse.buttonText}`;
+  }
+  
+  // Apply partner badge classes
+  applyPartnerBadgeClasses(button, otaData);
   
   // Click handler
   button.addEventListener('click', (e) => {
@@ -58,6 +83,8 @@ export function createDetailButton(config: ButtonConfig): HTMLElement {
     
     if (onClick) {
       onClick();
+    } else if (buttonResponse.redirectUrl) {
+      window.open(buttonResponse.redirectUrl, '_blank');
     } else {
       window.open('https://staging-app.stayfinder.co/', '_blank');
     }
