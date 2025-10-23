@@ -133,6 +133,29 @@
   position: absolute !important;
   bottom: 14px !important;
   right: 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 6px !important;
+}
+
+.stayfinder-logo-overlay span {
+  display: flex;
+  padding: 4px 8px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100px;
+  border: 1.5px solid rgba(255, 255, 255, 0.70);
+  background: rgba(0, 0, 0, 0.50);
+  color: #FFF;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 120%;
+  text-align: center;
+  font-family: var(--font-family) !important;
+}
+
+.stayfinder-logo-overlay button {
   background: var(--primary-color) !important;
   border-radius: 100% !important;
   z-index: 999999 !important;
@@ -144,21 +167,22 @@
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
+  border: none !important;
 }
 
-.stayfinder-logo-overlay svg {
+.stayfinder-logo-overlay button svg {
   width: 11px !important;
   height: 13px !important;
 }
 
-.stayfinder-logo-overlay:hover {
+.stayfinder-logo-overlay button:hover {
   background: #f8f9fa !important;
 }
 
-.stayfinder-logo-overlay:hover svg path:nth-child(1),
-.stayfinder-logo-overlay:hover svg path:nth-child(2) {
+.stayfinder-logo-overlay button:hover svg path:nth-child(1),
+.stayfinder-logo-overlay button:hover svg path:nth-child(2) {
   fill: var(--primary-color) !important;
-}
+} 
 
 /* shimmer */
 .sf-shimmer {

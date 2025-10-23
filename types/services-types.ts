@@ -51,6 +51,8 @@ export type OtaListingData = {
   listing_id: number;
   direct_booking: boolean;
   price_available: boolean;
+  verified_partner?: boolean;
+  preferred_partner?: boolean;
 };
 
 export type OtaListingsLookupResponse = {

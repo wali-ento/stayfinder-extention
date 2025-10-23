@@ -146,8 +146,8 @@ export async function runAirbnb() {
   }
 
   if (!isDetailPage() && !isCheckoutPage()) {
-    injectListingButtons(allPrices);
-    injectLogoOnImages(allPrices);
+    injectListingButtons(allPrices, otaListings);
+    injectLogoOnImages(allPrices, otaListings);
   }
 }
 

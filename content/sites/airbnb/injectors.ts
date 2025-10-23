@@ -1,13 +1,16 @@
 import { AIRBNB_CONFIG } from './config';
 import { createListingButton, createDetailButton } from '../../components/Button';
 import { findCardContainer } from '../../../utils/dom';
-import type { ListingPrices } from '../../../types/services-types';
+import type { ListingPrices, OtaListingData } from '../../../types/services-types';
 import { BOOK_DIRECT_ICON } from '@/assets/svg-icons';
 
 /**
  * Inject price buttons on listing cards
  */
-export function injectListingButtons(allPrices: Record<string, ListingPrices | null>) {
+export function injectListingButtons(
+  allPrices: Record<string, ListingPrices | null>,
+  otaListings: OtaListingData[]
+  ) {
   const links = document.querySelectorAll(AIRBNB_CONFIG.selectors.listingLinks);
   console.log(`Found ${links.length} property links`);
   
@@ -23,6 +26,11 @@ export function injectListingButtons(allPrices: Record<string, ListingPrices | n
     if (!match) return;
     
     const airbnbId = match[1];
+
+    const otaData = otaListings.find(o => o.airbnb_listing_id === airbnbId);
+    if (!otaData?.listing_id) {
+      return;
+    }
 
     const priceData = allPrices[airbnbId];
     if (!priceData) {
@@ -89,7 +97,10 @@ export function injectDetailButton(pricesData?: ListingPrices | null) {
 /**
  * Inject logo overlay on listing images
  */
-export function injectLogoOnImages(allPrices: Record<string, ListingPrices | null>) {
+export function injectLogoOnImages(
+  allPrices: Record<string, ListingPrices | null>,
+  otaListings: OtaListingData[]
+  ) {
   const links = document.querySelectorAll(AIRBNB_CONFIG.selectors.listingLinks);
   
   links.forEach((link) => {
@@ -100,6 +111,9 @@ export function injectLogoOnImages(allPrices: Record<string, ListingPrices | nul
     if (!match) return;
     
     const airbnbId = match[1];
+    const otaData = otaListings.find(ota => ota.airbnb_listing_id === airbnbId);
+    
+    if (!otaData?.listing_id) return;
 
     const priceData = allPrices[airbnbId];
     if (!priceData) {
@@ -120,7 +134,14 @@ export function injectLogoOnImages(allPrices: Record<string, ListingPrices | nul
     // Create logo overlay
     const logo = document.createElement('div');
     logo.className = 'stayfinder-logo-overlay';
-    logo.innerHTML = `${BOOK_DIRECT_ICON}`;
+    logo.innerHTML = `
+        <span>
+          Verified
+        </span>
+        <button>
+          ${BOOK_DIRECT_ICON}
+        </button>
+    `;
     
     logo.addEventListener('click', (e) => {
       e.preventDefault();

@@ -65,14 +65,3 @@ export function createDetailButton(config: ButtonConfig): HTMLElement {
   
   return button;
 }
-
-
-export function insertShimmerButton(container: HTMLElement) {
-  if (!container) return;
-  if (container.querySelector('.sf-shimmer')) return; // avoid duplicates
-
-  const shimmer = document.createElement('div');
-  shimmer.className = 'sf-shimmer';
-  shimmer.style.marginTop = '8px';
-  container.appendChild(shimmer);
-}
