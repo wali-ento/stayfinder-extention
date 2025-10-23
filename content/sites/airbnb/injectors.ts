@@ -1,8 +1,8 @@
 import { AIRBNB_CONFIG } from './config';
-import { createListingButton, createDetailButton, insertShimmerButton } from '../../components/Button';
+import { createListingButton, createDetailButton } from '../../components/Button';
 import { findCardContainer } from '../../../utils/dom';
 import type { ListingPrices } from '../../../types/services-types';
-import { SAVINGS_ICON } from '@/assets/svg-icons';
+import { BOOK_DIRECT_ICON } from '@/assets/svg-icons';
 
 /**
  * Inject price buttons on listing cards
@@ -120,7 +120,7 @@ export function injectLogoOnImages(allPrices: Record<string, ListingPrices | nul
     // Create logo overlay
     const logo = document.createElement('div');
     logo.className = 'stayfinder-logo-overlay';
-    logo.innerHTML = `${SAVINGS_ICON}`;
+    logo.innerHTML = `${BOOK_DIRECT_ICON}`;
     
     logo.addEventListener('click', (e) => {
       e.preventDefault();

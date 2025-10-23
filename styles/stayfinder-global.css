@@ -131,25 +131,33 @@
 /* Logo overlay on listing images */
 .stayfinder-logo-overlay {
   position: absolute !important;
-  bottom: 0 !important;
-  right: 0 !important;
-  background: white !important;
-  border-radius: 10px 10px 20px 10px !important;
-  padding: 8px !important;
+  bottom: 14px !important;
+  right: 14px !important;
+  background: var(--primary-color) !important;
+  border-radius: 100% !important;
   z-index: 999999 !important;
   pointer-events: auto !important;
   transition: all 0.3s ease !important;
   cursor: pointer !important;
+  width: 25px !important;
+  height: 25px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.stayfinder-logo-overlay svg {
+  width: 11px !important;
+  height: 13px !important;
 }
 
 .stayfinder-logo-overlay:hover {
   background: #f8f9fa !important;
-  transform: scale(1.05) !important;
 }
 
-.stayfinder-logo-overlay svg {
-  width: 40px !important;
-  height: 40px !important;
+.stayfinder-logo-overlay:hover svg path:nth-child(1),
+.stayfinder-logo-overlay:hover svg path:nth-child(2) {
+  fill: var(--primary-color) !important;
 }
 
 /* shimmer */
