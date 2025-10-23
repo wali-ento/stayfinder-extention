@@ -6,6 +6,10 @@ import { getListingPrices, lookupOtaListings } from '../../../services/api-servi
 import type { ListingPricesParams, ListingPrices, OtaListingData } from '../../../types/services-types';
 import { setupObserver } from '@/content/core/observer';
 
+const RUN_COOLDOWN_MS = 1500;
+let runAirbnbInFlight: Promise<void> | null = null;
+let lastRunFinishedAt = 0;
+
 /**
  * Fetch OTA listings lookup to get StayFinder listing IDs
 */
@@ -15,7 +19,6 @@ const fetchOtaListingsLookup = async (listingIds: string[]): Promise<OtaListingD
   const chunkSize = 18;
   const chunks = chunkArray(listingIds, chunkSize);
   const allResults: OtaListingData[] = [];
-
   for (const chunk of chunks) {
     try {
       const response = await lookupOtaListings({ listing_ids: chunk });
@@ -64,7 +67,7 @@ async function fetchListingPrice(listing_id: number): Promise<ListingPrices | nu
 }
 
 /**
- * For all OTA lookup results, call prices API where listing_id exists
+ * For all OTA lookup results, call prices API where listing_id exists  
  */
 async function fetchPricesForOtaListings(otaListings: OtaListingData[]): Promise<
   Record<string, ListingPrices | null>
@@ -75,11 +78,9 @@ async function fetchPricesForOtaListings(otaListings: OtaListingData[]): Promise
     const { airbnb_listing_id, listing_id } = item;
 
     if (listing_id) {
-      console.log(`💰 Fetching price for StayFinder listing: ${listing_id}`);
       const prices = await fetchListingPrice(listing_id);
       results[airbnb_listing_id] = prices;
     } else {
-      console.log(`⏭️ Skipping ${airbnb_listing_id} (no listing_id)`);
       results[airbnb_listing_id] = null;
     }
   }
@@ -91,70 +92,85 @@ async function fetchPricesForOtaListings(otaListings: OtaListingData[]): Promise
  * Run the Airbnb handler - extract and inject
  */
 export async function runAirbnb() {
-  // Extract and send listing IDs
-  let ids: string[] = [];
-
-  if (isCheckoutPage()) {
-    const checkoutId = extractCheckoutListingId();
-    if (checkoutId) ids.push(checkoutId);
-  } else {
-    ids = extractListingIds();
+  const now = Date.now();
+  if (now - lastRunFinishedAt < RUN_COOLDOWN_MS) {
+    return;
   }
 
-  if (ids.length > 0) {
-    console.log(`Found ${ids.length} listing IDs:`, ids);
+  if (runAirbnbInFlight) {
+    return runAirbnbInFlight;
   }
 
-  const otaListings = await fetchOtaListingsLookup(ids);
+  runAirbnbInFlight = (async () => {
+    // Extract and send listing IDs
+    let ids: string[] = [];
+    if (isCheckoutPage()) {
+      const checkoutId = extractCheckoutListingId();
+      if (checkoutId) ids.push(checkoutId);
+    } else {
+      ids = extractListingIds();
+    }
+
+    if (ids.length > 0) {
+      console.log(`Found ${ids.length} listing IDs:`, ids);
+    }
+
+    const otaListings = await fetchOtaListingsLookup(ids);
     if (!otaListings) {
       console.warn('⚠️ No OTA listings found');
       return;
     }
 
     const allPrices = await fetchPricesForOtaListings(otaListings as OtaListingData[]);
-    console.log('💹 All prices data: ', allPrices);
-  
-  //  Inject detail button only if we have prices data
-  
-  if (isDetailPage()) {
-    const currentId = ids[0]; // extractListingIds() gives the single one on detail page
-    const matchedOta = otaListings?.find(o => o.airbnb_listing_id === currentId);
 
-    if (matchedOta && matchedOta.listing_id) {
+    //  Inject detail button only if we have prices data
+    if (isDetailPage()) {
+      const currentId = ids[0]; // extractListingIds() gives the single one on detail page
+      const matchedOta = otaListings?.find(o => o.airbnb_listing_id === currentId);
+
+      if (matchedOta && matchedOta.listing_id) {
         if (allPrices[currentId]) {
           injectDetailButton(allPrices[currentId] as ListingPrices);
         }
-    }
-  }
-
-  //  Inject checkout button only if we have prices data
-  if (isCheckoutPage()) {
-    const checkoutListingId = ids[0];
-    const matchedOta = otaListings.find(o => o.airbnb_listing_id === checkoutListingId);
-
-    if (matchedOta?.listing_id) {
-      const checkoutPrices = allPrices[checkoutListingId];
-      if (checkoutPrices) {
-        console.log('🛒 Injecting checkout button with price data');
-        injectCheckoutButton(checkoutPrices);
-      } else {
-        console.log(`🛒 No price data available for checkout listing ${checkoutListingId}`);
       }
-    } else {
-      console.log(`🛒 No matching OTA data found for checkout listing ${checkoutListingId}`);
     }
-  }
 
-  if (!isDetailPage() && !isCheckoutPage()) {
-    injectListingButtons(allPrices);
-    injectLogoOnImages(allPrices);
+    //  Inject checkout button only if we have prices data
+    if (isCheckoutPage()) {
+      const checkoutListingId = ids[0];
+      const matchedOta = otaListings.find(o => o.airbnb_listing_id === checkoutListingId);
+
+      if (matchedOta?.listing_id) {
+        const checkoutPrices = allPrices[checkoutListingId];
+        if (checkoutPrices) {
+          console.log('🛒 Injecting checkout button with price data');
+          injectCheckoutButton(checkoutPrices);
+        } else {
+          console.log(`🛒 No price data available for checkout listing ${checkoutListingId}`);
+        }
+      } else {
+        console.log(`🛒 No matching OTA data found for checkout listing ${checkoutListingId}`);
+      }
+    }
+
+    if (!isDetailPage() && !isCheckoutPage()) {
+      injectListingButtons(allPrices);
+      injectLogoOnImages(allPrices);
+    }
+  })();
+
+  try {
+    await runAirbnbInFlight;
+  } finally {
+    lastRunFinishedAt = Date.now();
+    runAirbnbInFlight = null;
   }
 }
 
 /**
  * Initialize Airbnb handler
  */
-export function initAirbnb() {  
+export function initAirbnb() {
   setTimeout(() => {
     runAirbnb().catch(err => console.error('Error in runAirbnb:', err));
   }, AIRBNB_CONFIG.delays.initialLoad);
