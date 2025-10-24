@@ -175,11 +175,11 @@ export function injectLogoOnImages(
  * Inject button on checkout page with prices data
  */
 export function injectCheckoutButton(
-  pricesData?: ListingPrices | null,
-  otaData?: OtaListingData
+  pricesData: ListingPrices | null,
+  otaData: OtaListingData
 ) {
   // Check if button already exists
-  const existingButton = document.querySelector('.stayfinder-checkout-button') as HTMLElement;
+  const existingButton = document.querySelector('.sf-checkout-card') as HTMLElement;
   if (existingButton) return;
   
   // Try to find a good container for the button
@@ -193,13 +193,12 @@ export function injectCheckoutButton(
     return;
   }
   
-  // Create checkout button with OTA data and prices
-  const button = createDetailButton({ 
-    otaData: otaData,
-    pricesData: pricesData,
-    className: 'stayfinder-checkout-button'
-  });
+  // Create checkout card with OTA data and prices
+  const checkoutCard = document.createElement('div');
+  checkoutCard.className = 'sf-checkout-card';
+  const cardHTML = createCheckoutCard(otaData, pricesData);
+  checkoutCard.innerHTML = cardHTML;
 
-  buttonContainer.insertBefore(button, buttonContainer?.firstChild?.nextSibling as Node);
+  buttonContainer.insertBefore(checkoutCard, buttonContainer?.firstChild?.nextSibling as Node);
 }
 

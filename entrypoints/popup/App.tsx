@@ -1,3 +1,4 @@
+import { LOGO_ICON } from '@/assets/svg-icons';
 import './App.css';
 
 function App() {
@@ -6,11 +7,7 @@ function App() {
       <div className="header">
         <div className="logo-section">
           <div className="logo">
-            <div className="house-icon">
-              <div className="house-body"></div>
-              <div className="house-roof"></div>
-              <div className="house-chimney"></div>
-              <div className="orange-dot"></div>
+            <div className="house-icon" dangerouslySetInnerHTML={{ __html: LOGO_ICON }}>
             </div>
             <span className="logo-text">StayFinder</span>
           </div>

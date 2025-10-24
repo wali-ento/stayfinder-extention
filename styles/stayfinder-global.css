@@ -77,35 +77,6 @@
   font-weight: 600 !important;
 }
 
-/* Checkout page button */
-.stayfinder-checkout-button {
-  border-radius: 1000px !important;
-  background: radial-gradient(276.33% 143.12% at 0.43% 125.6%, #AB29FF 0%, #0677FF 100%) !important;
-  color: white !important;
-  padding: 10px 16px !important;
-  font-size: 14px !important;
-  font-weight: 600 !important;
-  line-height: 20px !important;
-  margin-top: 12px !important;
-  white-space: nowrap !important;
-  transition: all 0.3s ease !important;
-  text-align: center !important;
-  cursor: pointer !important;
-  pointer-events: auto !important;
-  z-index: 999999 !important;
-  position: relative !important;
-  display: block !important;
-  width: 100% !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  gap: 6px !important;
-}
-
-.stayfinder-checkout-button:hover {
-  background: radial-gradient(115.65% 59.9% at 83.65% 125.6%, #AB29FF 0%, #0677FF 100%) !important;
-}
-
 /* Status indicator */
 .stayfinder-indicator {
   position: fixed !important;
@@ -207,3 +178,101 @@
 .sf-partner-status svg path:nth-child(2) {
   fill: white !important;
 }
+
+/* StayFinder Checkout Card Styles */
+.sf-checkout-card {
+  border-radius: 16px !important;
+  border: 1px solid rgba(228, 228, 231, 0.60) !important;
+  background: #F9F9FA !important;
+  padding: 20px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 15px !important;
+  text-align: center !important;
+  font-family: var(--font-family) !important;
+  margin-top: 15px !important;
+}
+
+.sf-checkout-card .sf-header {
+  display: flex !important;
+  justify-content: flex-start !important;
+  align-items: center !important;
+  margin-bottom: 10px !important;
+}
+
+.sf-checkout-card .sf-logo {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-size: 1.2em !important;
+  font-weight: bold !important;
+  color: #333 !important;
+}
+
+.sf-checkout-card .sf-logo svg {
+  width: 24px !important;
+  height: 24px !important;
+}
+
+.sf-checkout-card .sf-price-info {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  font-size: 0.95em !important;
+  color: #555 !important;
+  margin-bottom: 5px !important;
+}
+
+.sf-checkout-card .sf-price {
+  font-size: 1.3em !important;
+  font-weight: bold !important;
+  color: #333 !important;
+}
+
+.sf-checkout-card .sf-savings-message {
+  font-size: 0.9em !important;
+  color: #666 !important;
+  line-height: 1.4 !important;
+  text-align: left !important;
+  margin: 0 !important;
+}
+
+.sf-checkout-card .sf-savings-message strong {
+  color: #333 !important;
+}
+
+.sf-checkout-card .sf-best-price-message {
+  font-size: 0.85em !important;
+  color: #888 !important;
+  margin: 10px 0 15px 0 !important;
+}
+
+.sf-checkout-card .sf-save-button {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  padding: 12px 20px !important;
+  border: none !important;
+  border-radius: 8px !important;
+  background: linear-gradient(to right, #8B5CF6, #6366F1) !important;
+  color: white !important;
+  font-size: 1.1em !important;
+  font-weight: bold !important;
+  cursor: pointer !important;
+  transition: background 0.3s ease !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  font-family: var(--font-family) !important;
+}
+
+.sf-checkout-card .sf-save-button:hover {
+  background: linear-gradient(to right, #7C3AED, #4F46E5) !important;
+}
+
+.sf-checkout-card .sf-save-button svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+/* StayFinder Check out Card Styles */
