@@ -92,3 +92,48 @@ export function createDetailButton(config: ButtonConfig): HTMLElement {
   
   return button;
 }
+
+/**
+ * Create a skeleton button with shimmer effect for listing cards
+ */
+export function createSkeletonButton(
+  width: string = '100%',
+  height: string = '40px',
+): HTMLElement {
+  const skeleton = document.createElement('div');
+  skeleton.className = `sf-skeleton-button sf-skeleton-listing`.trim();
+  skeleton.style.width = width;
+  skeleton.style.height = height;
+  
+  return skeleton;
+}
+
+/**
+ * Create a skeleton button with shimmer effect for detail pages
+ */
+export function createDetailSkeletonButton(
+  width: string = '100%',
+  height: string = '48px',
+): HTMLElement {
+  const skeleton = document.createElement('div');
+  skeleton.className = `sf-skeleton-button sf-skeleton-detail`.trim();
+  skeleton.style.width = width;
+  skeleton.style.height = height;
+  
+  return skeleton;
+}
+
+/**
+ * Create a skeleton button with shimmer effect for checkout pages
+ */
+export function createCheckoutSkeletonButton(
+  width: string = '100%',
+  height: string = '60px',
+): HTMLElement {
+  const skeleton = document.createElement('div');
+  skeleton.className = `sf-skeleton-button sf-skeleton-checkout`.trim();
+  skeleton.style.width = width;
+  skeleton.style.height = height;
+  
+  return skeleton;
+}

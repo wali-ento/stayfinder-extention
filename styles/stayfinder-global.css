@@ -274,5 +274,43 @@
   width: 16px !important;
   height: 16px !important;
 }
-
 /* StayFinder Check out Card Styles */
+
+/* Skeleton Loading Styles with Shimmer Effect */
+.sf-skeleton-button {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%) !important;
+  background-size: 200% 100% !important;
+  animation: shimmer 1.5s infinite !important;
+  border-radius: 8px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* Listing page skeleton button */
+.sf-skeleton-listing {
+  border-radius: 20px !important;
+  margin-top: 12px !important;
+}
+
+/* Detail page skeleton button */
+.sf-skeleton-detail {
+  border-radius: 1000px !important;
+  margin-top: 12px !important;
+}
+
+/* Checkout page skeleton button */
+.sf-skeleton-checkout {
+  border-radius: 8px !important;
+  margin-top: 15px !important;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+/* Skeleton Loading Styles with Shimmer Effect */
+

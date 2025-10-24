@@ -1,6 +1,17 @@
 import { AIRBNB_CONFIG } from './config';
 import { extractListingIds, extractSearchParams, isDetailPage, isCheckoutPage, extractCheckoutListingId } from './extractors';
-import { injectDetailButton, injectListingButtons, injectLogoOnImages, injectCheckoutButton } from './injectors';
+import { 
+  injectDetailButton, 
+  injectListingButtons, 
+  injectLogoOnImages, 
+  injectCheckoutButton,
+  injectListingSkeletonButtons,
+  removeListingSkeletonButtons,
+  injectDetailSkeletonButton,
+  removeDetailSkeletonButton,
+  injectCheckoutSkeletonButton,
+  removeCheckoutSkeletonButton
+} from './injectors';
 import { getCached, chunkArray } from '../../../utils/helper';
 import { getListingPrices, lookupOtaListings } from '../../../services/api-service';
 import type { ListingPricesParams, ListingPrices, OtaListingData } from '../../../types/services-types';
@@ -115,16 +126,34 @@ export async function runAirbnb() {
       console.log(`Found ${ids.length} listing IDs:`, ids);
     }
 
+    // Inject skeleton buttons immediately while waiting for API response
+    if (isDetailPage()) {
+      injectDetailSkeletonButton();
+    } else if (isCheckoutPage()) {
+      injectCheckoutSkeletonButton();
+    } else {
+      injectListingSkeletonButtons();
+    }
+
     const otaListings = await fetchOtaListingsLookup(ids);
     if (!otaListings) {
       console.warn('⚠️ No OTA listings found');
+      // Remove skeleton buttons if no data available
+      if (isDetailPage()) {
+        removeDetailSkeletonButton();
+      } else if (isCheckoutPage()) {
+        removeCheckoutSkeletonButton();
+      } else {
+        removeListingSkeletonButtons();
+      }
       return;
     }
 
     const allPrices = await fetchPricesForOtaListings(otaListings as OtaListingData[]);
 
-    //  Inject detail button only if we have prices data
+    // Remove skeleton buttons and inject actual buttons
     if (isDetailPage()) {
+      removeDetailSkeletonButton();
       const currentId = ids[0]; // extractListingIds() gives the single one on detail page
       const matchedOta = otaListings?.find(o => o.airbnb_listing_id === currentId);
 
@@ -133,10 +162,8 @@ export async function runAirbnb() {
           injectDetailButton(allPrices[currentId] as ListingPrices, matchedOta);
         }
       }
-    }
-
-    //  Inject checkout button only if we have prices data
-    if (isCheckoutPage()) {
+    } else if (isCheckoutPage()) {
+      removeCheckoutSkeletonButton();
       const checkoutListingId = ids[0];
       const matchedOta = otaListings.find(o => o.airbnb_listing_id === checkoutListingId);
 
@@ -151,9 +178,8 @@ export async function runAirbnb() {
       } else {
         console.log(`🛒 No matching OTA data found for checkout listing ${checkoutListingId}`);
       }
-    }
-
-    if (!isDetailPage() && !isCheckoutPage()) {
+    } else {
+      removeListingSkeletonButtons();
       injectListingButtons(allPrices, otaListings);
       injectLogoOnImages(allPrices, otaListings);
     }

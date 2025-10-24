@@ -1,5 +1,5 @@
 import { AIRBNB_CONFIG } from './config';
-import { createListingButton, createDetailButton } from '../../components/Button';
+import { createListingButton, createDetailButton, createSkeletonButton, createDetailSkeletonButton, createCheckoutSkeletonButton } from '../../components/Button';
 import { findCardContainer } from '../../../utils/dom';
 import type { ListingPrices, OtaListingData } from '../../../types/services-types';
 import { getButtonResponse, getPartnerBadgeText, shouldShowPartnerBadge } from '../../../utils/price';
@@ -51,6 +51,43 @@ export function injectListingButtons(
 }
 
 /**
+ * Inject skeleton buttons on listing cards while waiting for API response
+ */
+export function injectListingSkeletonButtons() {
+  const links = document.querySelectorAll(AIRBNB_CONFIG.selectors.listingLinks);
+  console.log(`Injecting skeleton buttons for ${links.length} property links`);
+  
+  if (links.length === 0) {
+    return;
+  }
+  
+  links.forEach((link) => {
+    const href = link.getAttribute('href');
+    if (!href) return;
+    
+    const match = href.match(AIRBNB_CONFIG.patterns.listingIdFromUrl);
+    if (!match) return;
+    
+    const cardContainer = findCardContainer(link as HTMLElement);
+    if (!cardContainer) return;
+    
+    // Skip if button already exists in this specific card
+    if (cardContainer.querySelector('.stayfinder-listing-button') || cardContainer.querySelector('.sf-skeleton-button')) return;
+
+    const skeletonButton = createSkeletonButton();
+    cardContainer.appendChild(skeletonButton);
+  });
+}
+
+/**
+ * Remove skeleton buttons from listing cards
+ */
+export function removeListingSkeletonButtons() {
+  const skeletonButtons = document.querySelectorAll('.sf-skeleton-listing');
+  skeletonButtons.forEach(button => button.remove());
+}
+
+/**
  * Inject button on detail pages with prices data
  */
 export function injectDetailButton(
@@ -90,6 +127,42 @@ export function injectDetailButton(
   });
 
   firstChild.parentNode?.insertBefore(button, firstChild.nextSibling);
+}
+
+/**
+ * Inject skeleton button on detail pages while waiting for API response
+ */
+export function injectDetailSkeletonButton() {
+  const existingButton = document.querySelector('.stayfinder-detail-button') as HTMLElement;
+  const existingSkeleton = document.querySelector('.sf-skeleton-detail') as HTMLElement;
+  
+  const detailElement = document.querySelector(AIRBNB_CONFIG.selectors.detailPageElement);
+  if (!detailElement) {
+    return;
+  }
+  
+  const firstChild = detailElement.querySelector(AIRBNB_CONFIG.selectors.bookingButtonContainer);
+  if (!firstChild) {
+    return;
+  }
+  
+  // If button or skeleton already exists, skip
+  if (existingButton || existingSkeleton) {
+    return;
+  }
+  
+  const skeletonButton = createDetailSkeletonButton();
+  firstChild.parentNode?.insertBefore(skeletonButton, firstChild.nextSibling);
+}
+
+/**
+ * Remove skeleton button from detail pages
+ */
+export function removeDetailSkeletonButton() {
+  const skeletonButton = document.querySelector('.sf-skeleton-detail');
+  if (skeletonButton) {
+    skeletonButton.remove();
+  }
 }
 
 /**
@@ -200,5 +273,35 @@ export function injectCheckoutButton(
   checkoutCard.innerHTML = cardHTML;
 
   buttonContainer.insertBefore(checkoutCard, buttonContainer?.firstChild?.nextSibling as Node);
+}
+
+/**
+ * Inject skeleton button on checkout page while waiting for API response
+ */
+export function injectCheckoutSkeletonButton() {
+  const existingButton = document.querySelector('.sf-checkout-card') as HTMLElement;
+  const existingSkeleton = document.querySelector('.sf-skeleton-checkout') as HTMLElement;
+  
+  // Try to find a good container for the button
+  let buttonContainer = document.querySelector(AIRBNB_CONFIG.selectors.checkoutButtonContainer);
+  if (!buttonContainer) return;
+  
+  // If button or skeleton already exists, skip
+  if (existingButton || existingSkeleton) {
+    return;
+  }
+  
+  const skeletonButton = createCheckoutSkeletonButton();
+  buttonContainer.insertBefore(skeletonButton, buttonContainer?.firstChild?.nextSibling as Node);
+}
+
+/**
+ * Remove skeleton button from checkout pages
+ */
+export function removeCheckoutSkeletonButton() {
+  const skeletonButton = document.querySelector('.sf-skeleton-checkout');
+  if (skeletonButton) {
+    skeletonButton.remove();
+  }
 }
 
