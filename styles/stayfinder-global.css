@@ -172,6 +172,7 @@
 
 .sf-partner-status:hover {
   background: radial-gradient(115.65% 59.9% at 83.65% 125.6%, #AB29FF 0%, #0677FF 100%) !important;
+  color: white !important;
 }
 
 .sf-partner-status svg path:nth-child(1),
@@ -247,33 +248,52 @@
   margin: 10px 0 15px 0 !important;
 }
 
-.sf-checkout-card .sf-save-button {
+.sf-checkout-card button {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   gap: 8px !important;
   padding: 12px 20px !important;
   border: none !important;
-  border-radius: 8px !important;
-  background: linear-gradient(to right, #8B5CF6, #6366F1) !important;
-  color: white !important;
+  border-radius: 200px;
+  border: 1px solid rgba(88, 88, 88, 0.20) !important;
+  background: white !important;
+  color: var(--text-color) !important;
   font-size: 1.1em !important;
-  font-weight: bold !important;
+  font-weight: 500 !important;
   cursor: pointer !important;
-  transition: background 0.3s ease !important;
+  transition: all 0.3s ease !important;
   width: 100% !important;
-  box-sizing: border-box !important;
   font-family: var(--font-family) !important;
 }
 
-.sf-checkout-card .sf-save-button:hover {
-  background: linear-gradient(to right, #7C3AED, #4F46E5) !important;
+.sf-checkout-card button:hover {
+  border: 1px solid #585858 !important;
+  color: var(--secondary-color) !important;
+  font-weight: 600 !important;
 }
 
-.sf-checkout-card .sf-save-button svg {
+.sf-checkout-card button svg {
   width: 16px !important;
   height: 16px !important;
 }
+.sf-checkout-card button svg path:nth-child(1),
+.sf-checkout-card button svg path:nth-child(2) {
+  fill: var(--primary-color) !important;
+}
+
+.sf-checkout-card .sf-partner-status {
+  background: radial-gradient(276.33% 143.12% at 0.43% 125.6%, #AB29FF 0%, #0677FF 100%) !important;
+  color: white !important;
+  border: none !important;
+}
+
+.sf-checkout-card .sf-partner-status:hover {
+  background: radial-gradient(115.65% 59.9% at 83.65% 125.6%, #AB29FF 0%, #0677FF 100%) !important;
+  color: white !important;
+  border: none !important;
+}
+
 /* StayFinder Check out Card Styles */
 
 /* Skeleton Loading Styles with Shimmer Effect */

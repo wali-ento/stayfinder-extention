@@ -206,18 +206,16 @@ export function injectLogoOnImages(
     if (!imgContainer) return;
     
     // Check if partner badge should be shown
-    const shouldShowBadge = shouldShowPartnerBadge(otaData);
     const badgeText = getPartnerBadgeText(otaData);
-    
+    const shouldShowBadge = shouldShowPartnerBadge(otaData);
+    if (!shouldShowBadge) return;
+
     // Create logo overlay with conditional badge
     const logo = document.createElement('div');
     logo.className = 'stayfinder-logo-overlay';
     
-    // Only include span if there's a partner badge to show
-    const badgeSpan = shouldShowBadge ? `<span>${badgeText}</span>` : '';
-    
     logo.innerHTML = `
-        ${badgeSpan}
+        ${shouldShowBadge ? `<span>${badgeText}</span>` : ''}
         <button>
           ${LOGO_ICON}
         </button>
@@ -265,14 +263,32 @@ export function injectCheckoutButton(
     console.log(`⏭️ Skipping checkout button injection — ${!otaData?.listing_id ? 'no listing_id' : 'conditions not met'}`);
     return;
   }
+
+  const hasPartnerStatus = Boolean(otaData?.verified_partner || otaData?.preferred_partner);
   
   // Create checkout card with OTA data and prices
   const checkoutCard = document.createElement('div');
   checkoutCard.className = 'sf-checkout-card';
+
   const cardHTML = createCheckoutCard(otaData, pricesData);
   checkoutCard.innerHTML = cardHTML;
 
   buttonContainer.insertBefore(checkoutCard, buttonContainer?.firstChild?.nextSibling as Node);
+  const saveButton = checkoutCard.querySelector('button') as HTMLElement;
+  if (saveButton && hasPartnerStatus) {
+    saveButton.classList.add('sf-partner-status');
+  }
+
+  saveButton.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (buttonResponse.redirectUrl) {
+      window.open(buttonResponse.redirectUrl, '_blank');
+    } else {
+      window.open('https://stayfinder.com', '_blank');
+    }
+  });
 }
 
 /**

@@ -18,24 +18,26 @@ export function createCheckoutCard(
           <span>StayFinder</span>
         </div>
       </div>
-
-      <div class="sf-price-info">
-        <p>Total price on StayFinder</p>
-        <p class="sf-price">$${Math.ceil(pricesData?.total_price || 0).toFixed(2)}</p>
-      </div>
-
-      <p class="sf-savings-message">
-        A total of <strong>20%</strong> you can save on this reservation,
-        giving you the best available rate.
-      </p>
+      ${otaData.price_available ? `
+        <div class="sf-price-info">
+          <p>Total price on StayFinder</p>
+          <p class="sf-price">$${Math.ceil(pricesData?.total_price || 0).toFixed(2)}</p>
+        </div>    
+        ` : 
+        `
+        <p class="sf-savings-message">
+          A total of <strong>20%</strong> you can save on this reservation,
+          giving you the best available rate.
+        </p>
+        `}
 
       <p class="sf-best-price-message">
         We found you the best available price.
       </p>
 
-      <button class="sf-save-button" ${onClick ? `onclick="${onClick}"` : ''}>
+      <button ${onClick ? `onclick="${onClick}"` : ''}>
         ${LOGO_ICON}
-        <span>Save $${Math.ceil(pricesData?.direct_booking_website_discount || 0)} total</span>
+        <span>${getButtonResponse(otaData, pricesData).buttonText}</span>
       </button>
   `;
 }

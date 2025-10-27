@@ -20,6 +20,7 @@ import { setupObserver } from '@/content/core/observer';
 const RUN_COOLDOWN_MS = 1500;
 let runAirbnbInFlight: Promise<void> | null = null;
 let lastRunFinishedAt = 0;
+let hasShownSkeleton = false;
 
 /**
  * Fetch OTA listings lookup to get StayFinder listing IDs
@@ -127,14 +128,17 @@ export async function runAirbnb() {
     }
 
     // Inject skeleton buttons immediately while waiting for API response
-    if (isDetailPage()) {
-      injectDetailSkeletonButton();
-    } else if (isCheckoutPage()) {
-      injectCheckoutSkeletonButton();
-    } else {
-      injectListingSkeletonButtons();
-    }
-
+      if (isDetailPage()) {
+        injectDetailSkeletonButton();
+      } else if (isCheckoutPage()) {
+        injectCheckoutSkeletonButton();
+      } else {
+        if (!hasShownSkeleton) {
+          injectListingSkeletonButtons();
+          hasShownSkeleton = true;
+        }
+      }
+      
     const otaListings = await fetchOtaListingsLookup(ids);
     if (!otaListings) {
       console.warn('⚠️ No OTA listings found');
@@ -182,6 +186,7 @@ export async function runAirbnb() {
       removeListingSkeletonButtons();
       injectListingButtons(allPrices, otaListings);
       injectLogoOnImages(allPrices, otaListings);
+      hasShownSkeleton = false;
     }
   })();
 

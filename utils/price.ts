@@ -22,7 +22,7 @@ export function getButtonResponse(
     const savings = Math.ceil(pricesData.direct_booking_website_discount || 0);
     return {
       shouldShow: true,
-      buttonText: `Save $${savings} total`,
+      buttonText: `${pricesData ? `Save $${savings} total` : 'Save $20 total'}`,
       redirectUrl: pricesData.book_now_url || '',
       savings: savings
     };
