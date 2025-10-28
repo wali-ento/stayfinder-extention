@@ -20,12 +20,14 @@ export function getButtonResponse(
   // Case 1: Direct booking with price available
   if (otaData.direct_booking && otaData.price_available && pricesData) {
     const savings = Math.ceil(pricesData.direct_booking_website_discount || 0);
-    return {
-      shouldShow: true,
-      buttonText: `${pricesData ? `Save $${savings} total` : 'Save $20 total'}`,
-      redirectUrl: pricesData.book_now_url || '',
-      savings: savings
-    };
+    if (savings > 0) {
+      return {
+        shouldShow: true,
+        buttonText: `${pricesData ? `Save $${savings} total` : 'Save $20 total'}`,
+        redirectUrl: pricesData.book_now_url || '',
+        savings: savings
+      };
+    }
   }
 
   // Case 2: Direct booking, price not available (estimated price)

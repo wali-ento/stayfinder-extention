@@ -9,7 +9,6 @@ import { ListingPrices, OtaListingData } from "@/types/services-types";
 export function createCheckoutCard(
     otaData: OtaListingData,
     pricesData: ListingPrices | null,
-    onClick?: () => void,
 ): string {
   return `
       <div class="sf-header">
@@ -23,21 +22,15 @@ export function createCheckoutCard(
           <p>Total price on StayFinder</p>
           <p class="sf-price">$${Math.ceil(pricesData?.total_price || 0).toFixed(2)}</p>
         </div>    
-        ` : 
-        `
-        <p class="sf-savings-message">
-          A total of <strong>20%</strong> you can save on this reservation,
-          giving you the best available rate.
-        </p>
-        `}
+        ` : ''}
 
       <p class="sf-best-price-message">
         We found you the best available price.
       </p>
 
-      <button ${onClick ? `onclick="${onClick}"` : ''}>
+      <button>
         ${LOGO_ICON}
-        <span>${getButtonResponse(otaData, pricesData).buttonText}</span>
+        <span>${getButtonResponse(otaData, pricesData).buttonText.replace('total', '')}</span>
       </button>
   `;
 }
