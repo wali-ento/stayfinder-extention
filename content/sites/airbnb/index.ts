@@ -135,7 +135,6 @@ export async function runAirbnb() {
       } else {
         if (!hasShownSkeleton) {
           injectListingSkeletonButtons();
-          hasShownSkeleton = true;
         }
       }
       
@@ -186,7 +185,7 @@ export async function runAirbnb() {
       removeListingSkeletonButtons();
       injectListingButtons(allPrices, otaListings);
       injectLogoOnImages(allPrices, otaListings);
-      hasShownSkeleton = false;
+      hasShownSkeleton = true;
     }
   })();
 
