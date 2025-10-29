@@ -35,9 +35,10 @@ export function createCheckoutCard(
         We found you the best available price.
       </p>
 
-      <button class="sf-save-button" style="background: ${isBlueBG ? '#0677FF' : '#FFFFFF'} !important;">
+      <button class="sf-save-button" style="background: ${!isBlueBG ? '' : 'transparent'} !important; color: ${!isBlueBG ? '#FFFFFF' : '#585858'} !important; border-color: ${!isBlueBG ? 'transparent' : 'rgba(88, 88, 88, 0.20)'} !important; ">
           ${LOGO_ICON}
-        <span>Save $${savings}</span>
+        <span>Save <em>$${savings}</em>
+        </span>
       </button>
   `;
 }

@@ -182,27 +182,28 @@
 
 /* StayFinder Checkout Card Styles */
 .sf-checkout-card {
-  border-radius: 16px !important;
-  background: #F9F9FA !important;
-  padding: 20px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 16px !important;
-  font-family: var(--font-family) !important;
-  margin-top: 15px !important;
-  position: relative !important;
-  border: 1px solid rgba(228, 228, 231, 0.60) !important;
+  overflow: hidden ;
+  border-radius: 16px;
+  background: #F9F9FA;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-family: var(--font-family);
+  margin-top: 15px;
+  position: relative;
+  border: 1px solid rgba(228, 228, 231, 0.60);
 }
 
 .sf-checkout-card::before {
-  content: '' !important;
-  top: -19px !important;
-  left: -61px !important;
-  width: 122px !important;
-  height: 94px !important;
-  position: absolute !important;
-  filter: blur(125px) !important;
-  background: rgba(6, 119, 255, 0.60) !important;
+  content: '';
+  top: -19px;
+  left: -61px;
+  width: 122px;
+  height: 94px;
+  position: absolute;
+  filter: blur(125px);
+  background: #0677FF;
 }
 
 .sf-checkout-card .sf-header {
@@ -292,19 +293,25 @@
   align-items: center !important;
   justify-content: center !important;
   gap: 8px !important;
-  padding: 8px 16px !important;
-  border: none !important;
+  padding: 13px 16px !important;
+  border: 1px solid transparent !important;
   border-radius: 1000px !important;
-  background: radial-gradient(276.33% 143.12% at 0.43% 125.6%, #AB29FF 0%, #0677FF 100%) !important;
+  border-radius: 1000px;
+background: radial-gradient(276.33% 143.12% at 0.43% 125.6%, #AB29FF 0%, #0677FF 100%) !important;
   color: white !important;
   font-size: 14px !important;
-  font-weight: 600 !important;
+  font-weight: 500 !important;
   line-height: 20px !important;
   cursor: pointer !important;
   transition: all 0.2s ease !important;
   width: 100% !important;
   box-sizing: border-box !important;
   font-family: var(--font-family) !important;
+}
+
+.sf-checkout-card .sf-save-button em {
+  font-style: normal !important;
+  font-weight: 600 !important;
 }
 
 .sf-checkout-card .sf-save-button:hover {
