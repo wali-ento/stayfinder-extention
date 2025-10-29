@@ -10,27 +10,34 @@ export function createCheckoutCard(
     otaData: OtaListingData,
     pricesData: ListingPrices | null,
 ): string {
+  const savings = otaData.price_available && pricesData ? 
+    Math.ceil((pricesData.total_price || 0) * 0.2) : 0; // Mock 20% savings
+ console.log(otaData);
+ const isBlueBG = otaData.preferred_partner || otaData.verified_partner;
   return `
       <div class="sf-header">
         <div class="sf-logo">
           ${LOGO_ICON}
-          <span>StayFinder</span>
+          <span>Stay<em>Finder</em></span>
         </div>
       </div>
+      
       ${otaData.price_available ? `
-        <div class="sf-price-info">
-          <p>Total price on StayFinder</p>
-          <p class="sf-price">$${Math.ceil(pricesData?.total_price || 0).toFixed(2)}</p>
-        </div>    
+        <div class="sf-price-section">
+          <div class="sf-price-row">
+            <span class="sf-price-label">Total price on StayFinder</span>
+            <span class="sf-price-value">$${Math.ceil(pricesData?.total_price || 0).toFixed(2)}</span>
+          </div>
+        </div>
         ` : ''}
 
       <p class="sf-best-price-message">
         We found you the best available price.
       </p>
 
-      <button>
-        ${LOGO_ICON}
-        <span>${getButtonResponse(otaData, pricesData).buttonText.replace('total', '')}</span>
+      <button class="sf-save-button" style="background: ${isBlueBG ? '#0677FF' : '#FFFFFF'} !important;">
+          ${LOGO_ICON}
+        <span>Save $${savings}</span>
       </button>
   `;
 }

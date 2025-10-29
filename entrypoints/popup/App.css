@@ -103,10 +103,63 @@ body {
   font-style: normal;
 }
 .description.active-state {
-  margin-bottom: 0;
+  margin-bottom: 16px;
+  text-align: center;
 }
 .description.not-supported-state {
   margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Price section for Active state */
+.price-section {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.price-label {
+  color: #000;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  font-style: normal;
+}
+
+.price-value {
+  color: #000;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 20px;
+  font-style: normal;
+}
+
+/* Save button with icon */
+.save-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: radial-gradient(276.33% 143.12% at 0.43% 125.6%, #AB29FF 0%, #0677FF 100%);
+}
+
+.house-icon-small {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.house-icon-small svg {
+  width: 100%;
+  height: 100%;
 }
 .cta-button {
   width: 100%;

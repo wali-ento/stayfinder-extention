@@ -183,51 +183,86 @@
 /* StayFinder Checkout Card Styles */
 .sf-checkout-card {
   border-radius: 16px !important;
-  border: 1px solid rgba(228, 228, 231, 0.60) !important;
   background: #F9F9FA !important;
   padding: 20px !important;
   display: flex !important;
   flex-direction: column !important;
-  gap: 15px !important;
-  text-align: center !important;
+  gap: 16px !important;
   font-family: var(--font-family) !important;
   margin-top: 15px !important;
+  position: relative !important;
+  border: 1px solid rgba(228, 228, 231, 0.60) !important;
+}
+
+.sf-checkout-card::before {
+  content: '' !important;
+  top: -19px !important;
+  left: -61px !important;
+  width: 122px !important;
+  height: 94px !important;
+  position: absolute !important;
+  filter: blur(125px) !important;
+  background: rgba(6, 119, 255, 0.60) !important;
 }
 
 .sf-checkout-card .sf-header {
   display: flex !important;
   justify-content: flex-start !important;
   align-items: center !important;
-  margin-bottom: 10px !important;
+  margin-bottom: 0 !important;
 }
 
 .sf-checkout-card .sf-logo {
   display: flex !important;
-  align-items: center !important;
-  gap: 8px !important;
-  font-size: 1.2em !important;
-  font-weight: bold !important;
-  color: #333 !important;
+  align-items: end !important;
+  gap: 7px !important;
+  font-size: 21.333px !important;
+  font-weight: 700 !important;
+  color: #000 !important;
+  line-height: 28.373px !important;
+  letter-spacing: -0.853px !important;
+}
+
+.sf-checkout-card .sf-logo em {
+  color: #000 !important;
+  font-weight: 300 !important;
+  font-style: normal !important;
+  font-size: 21.333px !important;
+  line-height: 28.373px !important;
+  letter-spacing: -0.853px !important;
 }
 
 .sf-checkout-card .sf-logo svg {
-  width: 24px !important;
-  height: 24px !important;
+  width: 27px !important;
+  height: 32px !important;
 }
 
-.sf-checkout-card .sf-price-info {
+.sf-checkout-card .sf-price-section {
+  width: 100% !important;
+  margin-bottom: 0 !important;
+}
+
+.sf-checkout-card .sf-price-row {
   display: flex !important;
   justify-content: space-between !important;
   align-items: center !important;
-  font-size: 0.95em !important;
-  color: #555 !important;
-  margin-bottom: 5px !important;
+  width: 100% !important;
 }
 
-.sf-checkout-card .sf-price {
-  font-size: 1.3em !important;
-  font-weight: bold !important;
-  color: #333 !important;
+ .sf-checkout-card .sf-price-label {
+  color: #000 !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: 20px !important;
+  font-style: normal !important;
+}
+
+.sf-checkout-card .sf-price-value {
+  color: #000 !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  line-height: 20px !important;
+  font-style: normal !important;
 }
 
 .sf-checkout-card .sf-savings-message {
@@ -243,39 +278,51 @@
 }
 
 .sf-checkout-card .sf-best-price-message {
-  font-size: 0.85em !important;
-  color: #888 !important;
-  margin: 10px 0 15px 0 !important;
+  color: #000 !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: 20px !important;
+  font-style: normal !important;
+  text-align: center !important;
+  margin: 0 !important;
 }
 
-.sf-checkout-card button {
+.sf-checkout-card .sf-save-button {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
   gap: 8px !important;
-  padding: 12px 20px !important;
+  padding: 8px 16px !important;
   border: none !important;
-  border-radius: 200px;
-  border: 1px solid rgba(88, 88, 88, 0.20) !important;
-  background: white !important;
-  color: var(--text-color) !important;
-  font-size: 1.1em !important;
-  font-weight: 500 !important;
+  border-radius: 1000px !important;
+  background: radial-gradient(276.33% 143.12% at 0.43% 125.6%, #AB29FF 0%, #0677FF 100%) !important;
+  color: white !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  line-height: 20px !important;
   cursor: pointer !important;
-  transition: all 0.3s ease !important;
+  transition: all 0.2s ease !important;
   width: 100% !important;
+  box-sizing: border-box !important;
   font-family: var(--font-family) !important;
 }
 
-.sf-checkout-card button:hover {
-  border: 1px solid #585858 !important;
-  color: var(--secondary-color) !important;
-  font-weight: 600 !important;
+.sf-checkout-card .sf-save-button:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 6px 16px rgba(139, 92, 246, 0.35) !important;
 }
 
-.sf-checkout-card button svg {
+.sf-checkout-card .sf-house-icon-small {
   width: 16px !important;
   height: 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.sf-checkout-card .sf-house-icon-small svg {
+  width: 100% !important;
+  height: 100% !important;
 }
 .sf-checkout-card button svg path:nth-child(1),
 .sf-checkout-card button svg path:nth-child(2) {
