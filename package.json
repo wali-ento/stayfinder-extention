@@ -15,10 +15,12 @@
     "postinstall": "wxt prepare"
   },
   "dependencies": {
+    "ahoy.js": "^0.4.4",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },
   "devDependencies": {
+    "@types/ahoy.js": "^0.4.2",
     "@types/chrome": "^0.1.22",
     "@types/react": "^19.1.12",
     "@types/react-dom": "^19.1.9",
