@@ -9,6 +9,7 @@ import { initBoostly } from './platforms/boostly';
 import { initHudson } from './platforms/hudson';
 import { initIcnd } from './platforms/icnd';
 import { initRealtech } from './platforms/realtech';
+import { initOwnerRez } from './platforms/ownerrez';
 import { detectCurrentSite } from './shared/site-detector';
 import { showStatusIndicator } from '../components/StatusIndicator';
 
@@ -63,6 +64,9 @@ export function initContentScript() {
       break;
     case 'realtech':
       initRealtech();
+      break;
+    case 'ownerrez':
+      initOwnerRez();
       break;
     default:
       console.log(`❌ No handler for site: ${key}`);

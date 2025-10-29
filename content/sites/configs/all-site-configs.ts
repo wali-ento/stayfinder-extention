@@ -11,7 +11,7 @@ export interface SiteConfig {
     listingLinks: string; // CSS selector for listing card links
     detailPageElement?: string; // Selector for detail page container
     imageContainer?: string; // Selector for image container
-    bookingButtonContainer?: string; // Where to inject booking button
+    bookingButton?: string; // Where to inject booking button
     checkoutButtonContainer?: string;
     cardContainer?: string; // Alternative card container selector
   };
@@ -31,10 +31,7 @@ export const SITE_CONFIGS: Record<string, SiteConfig> = {
     },
     selectors: {
       listingLinks: 'a[href*="/properties/"]',
-      detailPageElement: '.property-details',
-      imageContainer: '.property-image',
-      bookingButtonContainer: '.booking-section',
-      cardContainer: '.property-card, .listing-card',
+      bookingButton: 'a.btn[href*="/checkout"]',
     },
     delays: {
       initialLoad: 300,
@@ -56,16 +53,15 @@ export const SITE_CONFIGS: Record<string, SiteConfig> = {
       'en.ragq.com',
       'sierrablancacabins.net',
       'pineriverranch.com',
+      'booking.ownerrez.com',
     ],
     patterns: {
-      listingIdFromUrl: /\/orp([\da-f]+)$/,
+      listingIdFromUrl: /\/([^\/]+orp[a-z0-9]+)(?:\/|$|\?|#)/,
+      checkoutListingIdFromUrl: /\/([a-f0-9-]+)\/confirm/,
     },
     selectors: {
       listingLinks: 'a[href*="/orp"]',
-      detailPageElement: '.property-details',
-      imageContainer: '.property-gallery',
-      bookingButtonContainer: '.booking-widget',
-      cardContainer: '.property-card, .listing-card',
+      bookingButton: '.btn.btn-default',
     },
     delays: {
       initialLoad: 300,
@@ -84,7 +80,7 @@ export const SITE_CONFIGS: Record<string, SiteConfig> = {
       listingLinks: 'a[href*="/property-details/"], a[href*="/vacation-rental-property"]',
       detailPageElement: '.property-details',
       imageContainer: '.property-gallery',
-      bookingButtonContainer: '.booking-widget',
+      bookingButton: '.booking-widget',
       cardContainer: '.property-card, .listing-card',
     },
     delays: {
@@ -115,7 +111,7 @@ export const SITE_CONFIGS: Record<string, SiteConfig> = {
       listingLinks: 'a[href*="/property/"]',
       detailPageElement: '.property-details',
       imageContainer: '.property-photos',
-      bookingButtonContainer: '.booking-section',
+      bookingButton: '.booking-section',
       cardContainer: '.property-card, .listing-card',
     },
     delays: {
@@ -144,7 +140,7 @@ export const SITE_CONFIGS: Record<string, SiteConfig> = {
       listingLinks: 'a[href*="/en/"]',
       detailPageElement: '.property-details',
       imageContainer: '.property-photos',
-      bookingButtonContainer: '.booking-form',
+      bookingButton: '.booking-form',
       cardContainer: '.property-card, .listing-card',
     },
     delays: {
@@ -175,7 +171,7 @@ export const SITE_CONFIGS: Record<string, SiteConfig> = {
       listingLinks: 'a[href*="/listings/"]',
       detailPageElement: '.listing-details',
       imageContainer: '.listing-photos',
-      bookingButtonContainer: '.booking-form',
+      bookingButton: '.booking-form',
       cardContainer: '.listing-card, .property-card',
     },
     delays: {
@@ -206,7 +202,7 @@ export const SITE_CONFIGS: Record<string, SiteConfig> = {
       listingLinks: 'a[href*="/listing/"]',
       detailPageElement: '.listing-details',
       imageContainer: '.listing-photos',
-      bookingButtonContainer: '.booking-widget',
+      bookingButton: '.booking-widget',
       cardContainer: '.listing-card, .property-card',
     },
     delays: {
@@ -235,7 +231,7 @@ export const SITE_CONFIGS: Record<string, SiteConfig> = {
       listingLinks: 'a[href*="/cabin/"], a[href*="/property/"]',
       detailPageElement: '.property-details',
       imageContainer: '.property-gallery',
-      bookingButtonContainer: '.booking-section',
+      bookingButton: '.booking-section',
       cardContainer: '.property-card, .listing-card',
     },
     delays: {
@@ -265,7 +261,7 @@ export const SITE_CONFIGS: Record<string, SiteConfig> = {
       listingLinks: 'a[href*="/beach-rentals/"], a[href*="/booking/"], a[href*="/rentals/"]',
       detailPageElement: '.property-details',
       imageContainer: '.property-photos',
-      bookingButtonContainer: '.booking-form',
+      bookingButton: '.booking-form',
       cardContainer: '.property-card, .listing-card',
     },
     delays: {
@@ -295,7 +291,7 @@ export const SITE_CONFIGS: Record<string, SiteConfig> = {
       listingLinks: 'a[href*="/rental/"]',
       detailPageElement: '.property-details',
       imageContainer: '.property-photos',
-      bookingButtonContainer: '.booking-section',
+      bookingButton: '.booking-section',
       cardContainer: '.property-card, .listing-card',
     },
     delays: {
@@ -316,7 +312,7 @@ export const SITE_CONFIGS: Record<string, SiteConfig> = {
       listingLinks: 'a[href*="/rooms/"]',
       detailPageElement: '._1xm48ww',
       imageContainer: '.awuxh4x',
-      bookingButtonContainer: '[data-testid="book-it-default"]',
+      bookingButton: '[data-testid="book-it-default"]',
       checkoutButtonContainer: '.s19yufy1',
     },
     delays: {

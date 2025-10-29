@@ -12,6 +12,7 @@ export default defineContentScript({
     '*://*.guestybookings.com/*',
     
     // ===== OWNERREZ =====
+    '*://*.ownerrez.com/*',
     '*://*.wishlistnc.com/*',
     '*://*.yourcoastalproperties.com/*',
     '*://*.rockhillstays.com/*',
